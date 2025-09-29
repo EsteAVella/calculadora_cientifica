@@ -1,4 +1,5 @@
 #include "conversion.h"
+#include "dibujo.h"
 
 int precedencia(char op) {
     switch (op) {

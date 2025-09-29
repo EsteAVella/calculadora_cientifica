@@ -5,6 +5,8 @@
 	<string.h>
 	"estructuras.h"
 
+1759109559 as.h"
+
 1758747779 c:\users\agustin\desktop\ejercicios c\trabajo practico\calculadora cientifica\estructuras.h
 
 1759109805 source:c:\users\usuario\desktop\topicos_2025\calculadora cientifica\main.c
@@ -12,6 +14,8 @@
 	<stdlib.h>
 	<string.h>
 	"conversion.h"
+
+1759109613 n.h"
 
 1759109589 c:\users\usuario\desktop\topicos_2025\calculadora cientifica\estructuras.h
 
@@ -21,6 +25,8 @@
 	<string.h>
 	"reconocimiento.h"
 
+1759109821 iento.h"
+
 1759109559 c:\users\usuario\desktop\topicos_2025\calculadora cientifica\reconocimiento.h
 	"estructuras.h"
 
@@ -29,4 +35,36 @@
 
 1759109821 c:\users\usuario\desktop\topicos_2025\calculadora cientifica\conversion.h
 	"reconocimiento.h"
+
+1759153311 source:/home/esteban/workspace/calculadora_cientifica/conversion.c
+	"conversion.h"
+	"dibujo.h"
+
+1759109821 /home/esteban/workspace/calculadora_cientifica/conversion.h
+	"reconocimiento.h"
+
+1759109559 /home/esteban/workspace/calculadora_cientifica/reconocimiento.h
+	"estructuras.h"
+
+1759109589 /home/esteban/workspace/calculadora_cientifica/estructuras.h
+
+1759153676 source:/home/esteban/workspace/calculadora_cientifica/main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"conversion.h"
+	"dibujo.h"
+
+1759109864 source:/home/esteban/workspace/calculadora_cientifica/reconocimiento.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"reconocimiento.h"
+
+1759183093 /home/esteban/workspace/calculadora_cientifica/dibujo.h
+
+1759155152 source:/home/esteban/workspace/calculadora_cientifica/dibujo.c
+	<stdio.h>
+	<ctype.h>
+	<stdlib.h>
 
