@@ -1,0 +1,32 @@
+# depslib dependency file v1.0
+1758770474 source:c:\users\agustin\desktop\ejercicios c\trabajo practico\calculadora cientifica\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"estructuras.h"
+
+1758747779 c:\users\agustin\desktop\ejercicios c\trabajo practico\calculadora cientifica\estructuras.h
+
+1759109805 source:c:\users\usuario\desktop\topicos_2025\calculadora cientifica\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"conversion.h"
+
+1759109589 c:\users\usuario\desktop\topicos_2025\calculadora cientifica\estructuras.h
+
+1759109864 source:c:\users\usuario\desktop\topicos_2025\calculadora cientifica\reconocimiento.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"reconocimiento.h"
+
+1759109559 c:\users\usuario\desktop\topicos_2025\calculadora cientifica\reconocimiento.h
+	"estructuras.h"
+
+1759109613 source:c:\users\usuario\desktop\topicos_2025\calculadora cientifica\conversion.c
+	"conversion.h"
+
+1759109821 c:\users\usuario\desktop\topicos_2025\calculadora cientifica\conversion.h
+	"reconocimiento.h"
+
