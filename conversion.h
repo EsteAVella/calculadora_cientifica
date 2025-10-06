@@ -4,5 +4,6 @@
 #include "reconocimiento.h"
 
 void aPostfijo(ecuacion_t*);
+float resolverEcuacionEvaluada(ecuacion_t*, float, float);
 
 #endif // CONVERSION_H_INCLUDED
