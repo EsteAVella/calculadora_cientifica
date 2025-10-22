@@ -19,6 +19,8 @@ void eliminarEcuacion(ecuacion_t*, int*);
 //Punto B
 void verEcuaciones(ecuacion_t*, int);
 
+void guardarReiniciar(ecuacion_t*,int*);
+
 
 //Punto H
 void ayuda();

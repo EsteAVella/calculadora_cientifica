@@ -6,11 +6,8 @@
 #include "reconocimiento.h"
 #include "dibujo.h"
 
-#define MAX_ECUACIONES 5
+#define MAX_ECUACIONES 10
 
-void guardarReiniciar() {
-    printf("[C] Guardar y reiniciar sesion\n");
-}
 void leerEcuaciones() {
     printf("[D] Leer ecuaciones guardadas\n");
 }
@@ -59,7 +56,7 @@ void dibujarInicio(){
            case 'B': verEcuaciones(ecuaciones, cantEcuacionesActuales);
                     break;
 
-           case 'C': guardarReiniciar();
+           case 'C': guardarReiniciar(ecuaciones,&cantEcuacionesActuales);
                     break;
 
            case 'D': leerEcuaciones();
@@ -182,10 +179,46 @@ void verEcuaciones(ecuacion_t *ecuacion, int cantidadEcuaciones) {
     punteroEcuacion=ecuacion;
 
     limpiarConsola();
-    for(i=0;i<cantidadEcuaciones;i++){
-        printf("Ecuacion Nro.%d: %s\n", i+1, punteroEcuacion->cadenaOriginal);
+    for(i = 0; i < cantidadEcuaciones; i++){
+        printf("Ecuacion Nro.%d: %s\n", i + 1, punteroEcuacion->cadenaOriginal);
         punteroEcuacion++;
     }
+}
+
+void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
+    static int numeroArchivo = 1;
+    FILE *pf;
+
+    char nombreArchivo[30];
+    ecuacion_t *punteroEcuacion;
+    punteroEcuacion = ecuacion;
+
+    sprintf(nombreArchivo,"ecuaciones-%d.txt",numeroArchivo);
+
+    pf = fopen(nombreArchivo,"w");
+    if(!pf){
+        printf("Error al abrir el archivo");
+        return;
+    }
+
+    for(int i = 0; i < *cant; i++){
+        fprintf(pf,"%s\n", punteroEcuacion->cadenaOriginal);
+        punteroEcuacion++;
+    }
+    fclose(pf);
+
+    printf("la sesion fue guardada correctamente en %s \n",nombreArchivo);
+
+    for(int i = 0; i < *cant; i++){
+        ecuacion[i].cadenaOriginal[0] = '\0';
+    }
+
+    *cant = 0;
+    printf("Sesion actual reiniciada\n");
+
+    limpiarBufferEntrada();
+    pausa();
+    limpiarConsola();
 }
 
 

@@ -2,11 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include "conversion.h"
+#include "dibujo.h"
 
 int main(){
 
     char *cadena="3+27-3*x";
     ecuacion_t ecu;
+
+    dibujarInicio();
 
     tokenizar(cadena, &ecu);
     mostrarTokens(&ecu);
