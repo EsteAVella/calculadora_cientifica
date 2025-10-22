@@ -180,6 +180,7 @@ void verEcuaciones(ecuacion_t *ecuacion, int cantidadEcuaciones) {
     }
 }
 
+//Punto C
 void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
     int numeroArchivo = leerContador();
     FILE *pf;
@@ -281,6 +282,7 @@ int abrirSesion(ecuacion_t *ecuaciones, int numeroSesion) {
     return i;
 }
 
+//Punto D
 void leerEcuaciones(ecuacion_t *ecuaciones, int *cantEcuaciones) {
     int cantidadGuardadas = leerContador();
     int numero;
@@ -307,6 +309,7 @@ void leerEcuaciones(ecuacion_t *ecuaciones, int *cantEcuaciones) {
     printf("\nSe cargaron %d ecuaciones en la sesión actual.\n", *cantEcuaciones);
 }
 
+//Punto E
 void borrarEcuaciones(int numero) {
     char op;
     printf("Esta completamente seguro de eliminar todos los archivos? (s/n): ");
@@ -327,9 +330,10 @@ void borrarEcuaciones(int numero) {
             archivosBorrados++;
         }
     }
-
+    guardarContador(1);
     printf("Se eliminaron %d archivos.\n", archivosBorrados);
 }
+
 //Punto H
 void ayuda() {
     limpiarConsola();
