@@ -7,18 +7,13 @@
 #include "dibujo.h"
 
 #define MAX_ECUACIONES 10
+#define ARCHIVO_CONTADOR "contador.bin"
+#define MAX_ARCHIVOS 10
 
-void leerEcuaciones() {
-    printf("[D] Leer ecuaciones guardadas\n");
-}
-void borrarEcuaciones() {
-    printf("[E] Borrar ecuaciones guardadas\n");
-}
+
 void resolverEcuacion() {
     printf("[F] Resolver ecuacion\n");
 }
-
-
 
 //Funcion principal (menu)
 void dibujarInicio(){
@@ -59,7 +54,7 @@ void dibujarInicio(){
            case 'C': guardarReiniciar(ecuaciones,&cantEcuacionesActuales);
                     break;
 
-           case 'D': leerEcuaciones();
+           case 'D': leerEcuaciones(ecuaciones,&cantEcuacionesActuales);
                     break;
 
 
@@ -186,7 +181,7 @@ void verEcuaciones(ecuacion_t *ecuacion, int cantidadEcuaciones) {
 }
 
 void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
-    static int numeroArchivo = 1;
+    int numeroArchivo = leerContador();
     FILE *pf;
 
     char nombreArchivo[30];
@@ -214,6 +209,9 @@ void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
     }
 
     *cant = 0;
+    numeroArchivo++;
+    if (numeroArchivo > MAX_ARCHIVOS) numeroArchivo = 1;
+    guardarContador(numeroArchivo);
     printf("Sesion actual reiniciada\n");
 
     limpiarBufferEntrada();
@@ -221,7 +219,117 @@ void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
     limpiarConsola();
 }
 
+int leerContador(void) {
 
+    FILE *pf = fopen(ARCHIVO_CONTADOR, "rb");
+    int contador = 1;
+
+    if(!pf){
+        return -9;
+    }
+
+    if (pf) {
+        if (fread(&contador, sizeof(int), 1, pf) != 1) {
+            contador = 1;
+        }
+        fclose(pf);
+    } else {
+        // caso base cuando no hay archivo crearlo con el 1 solo
+        pf = fopen(ARCHIVO_CONTADOR, "wb");
+        if (pf) {
+            fwrite(&contador, sizeof(int), 1, pf);
+            fclose(pf);
+        } else {
+            printf("No se pudo crear %s\n", ARCHIVO_CONTADOR);
+        }
+    }
+    //Chqueo que no se vaya de rango si es 10 lo mandamos a 1
+    if (contador < 1 || contador > MAX_ARCHIVOS) contador = 1;
+    return contador;
+}
+
+void guardarContador(int contador) {
+    FILE *pf = fopen(ARCHIVO_CONTADOR, "wb");
+    if (pf) {
+        fwrite(&contador, sizeof(int), 1, pf);
+        fclose(pf);
+    } else {
+        printf("No se pudo abrir %s para escribir el contador\n", ARCHIVO_CONTADOR);
+    }
+}
+
+int abrirSesion(ecuacion_t *ecuaciones, int numeroSesion) {
+    FILE *pf;
+    char nombreArchivo[30];
+    int i = 0;
+
+    sprintf(nombreArchivo, "ecuaciones-%d.txt", numeroSesion);
+    pf = fopen(nombreArchivo, "r");
+
+    if (!pf) {
+        printf("Error al abrir %s\n", nombreArchivo);
+        return 0;
+    }
+
+    while (fgets(ecuaciones[i].cadenaOriginal, sizeof(ecuaciones[i].cadenaOriginal), pf)) {
+        ecuaciones[i].cadenaOriginal[strcspn(ecuaciones[i].cadenaOriginal, "\n")] = '\0';
+        i++;
+        if (i >= MAX_ECUACIONES) break;
+    }
+
+    fclose(pf);
+    return i;
+}
+
+void leerEcuaciones(ecuacion_t *ecuaciones, int *cantEcuaciones) {
+    int cantidadGuardadas = leerContador();
+    int numero;
+
+    if (cantidadGuardadas <= 0) {
+        printf("No hay sesiones guardadas.\n");
+        return;
+    }
+
+    printf("\n=== SESIONES GUARDADAS ===\n");
+    for (int i = 1; i <= cantidadGuardadas; i++) {
+        printf("[%d] ecuaciones-%d.txt\n", i, i);
+    }
+
+    printf("\nSeleccione el número de sesión que desea abrir: ");
+    scanf("%d", &numero);
+
+    if (numero < 1 || numero > cantidadGuardadas) {
+        printf("Número inválido.\n");
+        return;
+    }
+
+    *cantEcuaciones = abrirSesion(ecuaciones, numero);
+    printf("\nSe cargaron %d ecuaciones en la sesión actual.\n", *cantEcuaciones);
+}
+
+void borrarEcuaciones(int numero) {
+    char op;
+    printf("Esta completamente seguro de eliminar todos los archivos? (s/n): ");
+    op = getchar();
+    limpiarBufferEntrada(); // para limpiar el ENTER que queda en el buffer
+
+    if (op == 'n' || op == 'N') {
+        printf("No se eliminaron los archivos.\n");
+        return; // salir de la función
+    }
+
+    int archivosBorrados = 0;
+    char nombreArchivo[30];
+
+    for (int i = 1; i <= MAX_ARCHIVOS; i++) {
+        sprintf(nombreArchivo, "ecuaciones-%d.txt", i);
+        if (remove(nombreArchivo) == 0) {
+            archivosBorrados++;
+        }
+    }
+
+    printf("Se eliminaron %d archivos.\n", archivosBorrados);
+}
 //Punto H
 void ayuda() {
     limpiarConsola();

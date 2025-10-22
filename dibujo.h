@@ -10,6 +10,9 @@ void dibujarInicio();
 void limpiarConsola();
 void pausa();
 void limpiarBufferEntrada();
+int  leerContador();
+void guardarContador(int);
+int abrirSesion(ecuacion_t*, int);
 
 //Punto A
 void escribirEcuacion(ecuacion_t*, int*);
@@ -19,8 +22,14 @@ void eliminarEcuacion(ecuacion_t*, int*);
 //Punto B
 void verEcuaciones(ecuacion_t*, int);
 
+//Punto C
 void guardarReiniciar(ecuacion_t*,int*);
 
+//Punto D
+void leerEcuaciones(ecuacion_t*,int*);
+
+//Punto E
+void borrarEcuaciones();
 
 //Punto H
 void ayuda();

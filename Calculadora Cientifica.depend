@@ -168,7 +168,7 @@
 	<string.h>
 	"reconocimiento.h"
 
-1761092516 source:/home/esteban/workspace/calculadora_cientifica/dibujo.c
+1761132611 source:/home/esteban/workspace/calculadora_cientifica/dibujo.c
 	<stdio.h>
 	<ctype.h>
 	<stdlib.h>
@@ -177,6 +177,6 @@
 	"reconocimiento.h"
 	"dibujo.h"
 
-1761093230 /home/esteban/workspace/calculadora_cientifica/dibujo.h
+1761137093 /home/esteban/workspace/calculadora_cientifica/dibujo.h
 	"conversion.h"
 
