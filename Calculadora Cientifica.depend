@@ -36,71 +36,102 @@
 1759109821 c:\users\usuario\desktop\topicos_2025\calculadora cientifica\conversion.h
 	"reconocimiento.h"
 
-1759153311 source:/home/esteban/workspace/calculadora_cientifica/conversion.c
+1759700772 source:/home/esteban/workspace/calculadora_cientifica/conversion.c
 	"conversion.h"
 	"dibujo.h"
+	"conversion.h"
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
 
 1759592295 
 
-1759109821 /home/esteban/workspace/calculadora_cientifica/conversion.h
+1759587908 /home/esteban/workspace/calculadora_cientifica/conversion.h
+	"reconocimiento.h"
 	"reconocimiento.h"
 
-1759109559 /home/esteban/workspace/calculadora_cientifica/reconocimiento.h
+1759537086 /home/esteban/workspace/calculadora_cientifica/reconocimiento.h
+	"estructuras.h"
 	"estructuras.h"
 
-1759109589 /home/esteban/workspace/calculadora_cientifica/estructuras.h
+1759537086 /home/esteban/workspace/calculadora_cientifica/estructuras.h
 
-1759153676 source:/home/esteban/workspace/calculadora_cientifica/main.c
+1761092541 source:/home/esteban/workspace/calculadora_cientifica/main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"conversion.h"
+	"dibujo.h"
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	"conversion.h"
 	"dibujo.h"
 
-1759109864 source:/home/esteban/workspace/calculadora_cientifica/reconocimiento.c
+1759537086 source:/home/esteban/workspace/calculadora_cientifica/reconocimiento.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"reconocimiento.h"
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	"reconocimiento.h"
 
-1759183093 /home/esteban/workspace/calculadora_cientifica/dibujo.h
+1761137093 /home/esteban/workspace/calculadora_cientifica/dibujo.h
+	"conversion.h"
 
-1759155152 source:/home/esteban/workspace/calculadora_cientifica/dibujo.c
+1761132611 source:/home/esteban/workspace/calculadora_cientifica/dibujo.c
 	<stdio.h>
 	<ctype.h>
 	<stdlib.h>
+	<stdio.h>
+	<ctype.h>
+	<stdlib.h>
+	<string.h>
+	"estructuras.h"
+	"reconocimiento.h"
+	"dibujo.h"
 
-1759537085 source:c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\reconocimiento.c
+1761144220 source:c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\reconocimiento.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	"reconocimiento.h"
 
-1759537085 c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\reconocimiento.h
+1761157117 c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\reconocimiento.h
 	"estructuras.h"
 
-1759537085 c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\estructuras.h
+1761144220 c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\estructuras.h
 
-1759592295 source:c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\conversion.c
+1761161237 source:c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\conversion.c
 	"conversion.h"
 	<math.h>
+	<stdio.h>
+	<stdlib.h>
 
-1759539927 c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\dibujo.h
+1761163559 c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\dibujo.h
+	<stdbool.h>
 	"conversion.h"
 
-1759587907 c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\conversion.h
+1761144220 c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\conversion.h
 	"reconocimiento.h"
 
-1759592409 source:c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\main.c
+1761165097 source:c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	"conversion.h"
+	"dibujo.h"
 
-1759539865 source:c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\dibujo.c
+1761166240 source:c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\dibujo.c
 	<stdio.h>
 	<ctype.h>
 	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	"estructuras.h"
+	"reconocimiento.h"
 	"dibujo.h"
 
 1759700770 source:/home/agus/Desktop/calculadora_cientifica_Discord/conversion.c
@@ -139,44 +170,5 @@
 	"dibujo.h"
 
 1759699317 /home/agus/Desktop/calculadora_cientifica_Discord/dibujo.h
-	"conversion.h"
-
-1759700772 source:/home/esteban/workspace/calculadora_cientifica/conversion.c
-	"conversion.h"
-	<math.h>
-	<stdio.h>
-	<stdlib.h>
-
-1759587908 /home/esteban/workspace/calculadora_cientifica/conversion.h
-	"reconocimiento.h"
-
-1759537086 /home/esteban/workspace/calculadora_cientifica/reconocimiento.h
-	"estructuras.h"
-
-1759537086 /home/esteban/workspace/calculadora_cientifica/estructuras.h
-
-1761092541 source:/home/esteban/workspace/calculadora_cientifica/main.c
-	<stdio.h>
-	<stdlib.h>
-	<string.h>
-	"conversion.h"
-	"dibujo.h"
-
-1759537086 source:/home/esteban/workspace/calculadora_cientifica/reconocimiento.c
-	<stdio.h>
-	<stdlib.h>
-	<string.h>
-	"reconocimiento.h"
-
-1761132611 source:/home/esteban/workspace/calculadora_cientifica/dibujo.c
-	<stdio.h>
-	<ctype.h>
-	<stdlib.h>
-	<string.h>
-	"estructuras.h"
-	"reconocimiento.h"
-	"dibujo.h"
-
-1761137093 /home/esteban/workspace/calculadora_cientifica/dibujo.h
 	"conversion.h"
 

@@ -2,59 +2,58 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="reconocimiento.c" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="reconocimiento.c" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1941" topLine="36" />
+			<Cursor1 position="137" topLine="0" />
 		</Cursor>
 		<Folding>
-			<Collapse line="67" />
 			<Collapse line="96" />
 		</Folding>
 	</File>
-	<File name="conversion.c" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="conversion.c" open="1" top="1" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="5069" topLine="0" />
+			<Cursor1 position="4281" topLine="100" />
 		</Cursor>
-		<Folding>
-			<Collapse line="6" />
-			<Collapse line="25" />
-			<Collapse line="32" />
-			<Collapse line="88" />
-		</Folding>
 	</File>
-	<File name="dibujo.c" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="reconocimiento.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="5926" topLine="199" />
-		</Cursor>
-		<Folding>
-			<Collapse line="118" />
-			<Collapse line="131" />
-			<Collapse line="174" />
-		</Folding>
-	</File>
-	<File name="conversion.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="214" topLine="0" />
+			<Cursor1 position="141" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="dibujo.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="440" topLine="0" />
+			<Cursor1 position="74" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="main.c" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="main.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="196" topLine="0" />
+			<Cursor1 position="146" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="reconocimiento.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="dibujo.c" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="397" topLine="3" />
+			<Cursor1 position="11614" topLine="180" />
+		</Cursor>
+		<Folding>
+			<Collapse line="76" />
+			<Collapse line="81" />
+			<Collapse line="125" />
+			<Collapse line="181" />
+			<Collapse line="220" />
+			<Collapse line="249" />
+			<Collapse line="259" />
+			<Collapse line="282" />
+			<Collapse line="308" />
+		</Folding>
+	</File>
+	<File name="estructuras.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1434" topLine="28" />
 		</Cursor>
 	</File>
-	<File name="estructuras.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="conversion.h" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1434" topLine="0" />
+			<Cursor1 position="88" topLine="0" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

@@ -16,8 +16,10 @@ int precedencia(char op) {
             return 2;
         case '^':
             return 3;
-        case '~':
+        case 'v':
             return 3;
+        case '_':
+            return 4;
         default:
             return 0;
     }
@@ -25,7 +27,7 @@ int precedencia(char op) {
 
 int asociatividad(char op) {
     // 0 = izquierda, 1 = derecha
-    if (op == '^' || op == '~')
+    if (op == '^' || op == '~' || op == '_')
         return 1;
     return 0;
 }
@@ -102,17 +104,22 @@ float resolverEcuacionEvaluada(ecuacion_t* ecu, float valorX, float valorY){
             else if (pIn->incognita == 'y' || pIn->incognita == 'Y')
                 *(++pTope) = valorY;
         }
-        else if (pIn->tipo == OPERACION) { //si es una operacion agarro los 2 ultimos operandos,
-            float b = *pTope; pTope--;
-            float a = *pTope; pTope--;
+        else if (pIn->tipo == OPERACION) {
+            float a, b;
 
-            switch (pIn->operacion) { //switch segun operador, en todos los casos aumento el puntero de tope para que no pise lo que este en la pila
-                case '+': *(++pTope) = a + b; break;
-                case '-': *(++pTope) = a - b; break;
-                case '*': *(++pTope) = a * b; break;
-                case '/': *(++pTope) = a / b; break;
-                case '^': *(++pTope) = powf(a, b); break;
-                case '~': *(++pTope) = powf(b, 1.0/a); break;
+            if (pIn->operacion == '_') {
+                *pTope = -(*pTope); //como es unario solo niego el tope
+            } else {
+                b = *pTope; pTope--;
+                a = *pTope; pTope--;
+                switch (pIn->operacion) {
+                    case '+': *(++pTope) = a + b; break;
+                    case '-': *(++pTope) = a - b; break;
+                    case '*': *(++pTope) = a * b; break;
+                    case '/': *(++pTope) = a / b; break;
+                    case '^': *(++pTope) = powf(a, b); break;
+                    case '~': *(++pTope) = powf(b, 1.0 / a); break;
+                }
             }
         }
     }
