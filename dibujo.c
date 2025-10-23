@@ -44,17 +44,9 @@ void dibujarInicio(){
                         eliminarEcuacion(ecuaciones, &cantEcuacionesActuales);
                     }
                     break;
-
-           case 'B': verEcuaciones(ecuaciones, cantEcuacionesActuales);
-                    break;
-
-           case 'C': guardarReiniciar(ecuaciones,&cantEcuacionesActuales);
-                    break;
-
-           case 'D': leerEcuaciones(ecuaciones,&cantEcuacionesActuales);
-                    break;
-
-
+           case 'B': verEcuaciones(ecuaciones, cantEcuacionesActuales);break;
+           case 'C': guardarReiniciar(ecuaciones,&cantEcuacionesActuales);break;
+           case 'D': leerEcuaciones(ecuaciones,&cantEcuacionesActuales);break;
            case 'E': borrarEcuaciones(); break;
            case 'F': resolverEcuacion(ecuaciones, &cantEcuacionesActuales); break;
            case 'H': ayuda(); break;
@@ -84,6 +76,66 @@ void limpiarBufferEntrada() {
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
+//Funciones compartidas entre C, D, E
+int leerContador(void) {
+
+    FILE *pf = fopen(ARCHIVO_CONTADOR, "rb");
+    int contador = 1;
+
+    if(!pf){
+        return -9;
+    }
+
+    if (pf) {
+        if (fread(&contador, sizeof(int), 1, pf) != 1) {
+            contador = 1;
+        }
+        fclose(pf);
+    } else {
+        // caso base cuando no hay archivo crearlo con el 1 solo
+        pf = fopen(ARCHIVO_CONTADOR, "wb");
+        if (pf) {
+            fwrite(&contador, sizeof(int), 1, pf);
+            fclose(pf);
+        } else {
+            printf("No se pudo crear %s\n", ARCHIVO_CONTADOR);
+        }
+    }
+    //Chqueo que no se vaya de rango si es 10 lo mandamos a 1
+    if (contador < 1 || contador > MAX_ARCHIVOS) contador = 1;
+    return contador;
+}
+void guardarContador(int contador) {
+    FILE *pf = fopen(ARCHIVO_CONTADOR, "wb");
+    if (pf) {
+        fwrite(&contador, sizeof(int), 1, pf);
+        fclose(pf);
+    } else {
+        printf("No se pudo abrir %s para escribir el contador\n", ARCHIVO_CONTADOR);
+    }
+}
+int abrirSesion(ecuacion_t *ecuaciones, int numeroSesion) {
+    FILE *pf;
+    char nombreArchivo[30];
+    int i = 0;
+
+    sprintf(nombreArchivo, "ecuaciones-%d.txt", numeroSesion);
+    pf = fopen(nombreArchivo, "r");
+
+    if (!pf) {
+        printf("Error al abrir %s\n", nombreArchivo);
+        return 0;
+    }
+
+    while (fgets(ecuaciones[i].cadenaOriginal, sizeof(ecuaciones[i].cadenaOriginal), pf)) {
+        ecuaciones[i].cadenaOriginal[strcspn(ecuaciones[i].cadenaOriginal, "\n")] = '\0';
+        i++;
+        if (i >= MAX_ECUACIONES) break;
+    }
+
+    fclose(pf);
+    return i;
+}
 
 //Punto A
 void escribirEcuacion(ecuacion_t *ecuacion, int *posicion) {
@@ -104,6 +156,9 @@ void escribirEcuacion(ecuacion_t *ecuacion, int *posicion) {
         printf("Ingrese la ecuacion: ");
         fgets(cadenaAux,sizeof(cadenaAux),stdin);
         permitido=verificarEcuacionEscrita(cadenaAux);
+        //limpiar pantalla, mostrar la ecuacion escrita
+        //Preguntar si desea editarla.
+        //Si es afirmativo, lo envia a una funcion en donde se carga cadenaaAux, y se reescribe.
     }
 
     strcpy(punteroEcuacion->cadenaOriginal, cadenaAux);
@@ -164,7 +219,6 @@ void eliminarEcuacion(ecuacion_t *ecuaciones, int *cantEcuaciones) {
     printf("Ecuacion eliminada correctamente.\n");
 }
 
-
 //Punto B
 void verEcuaciones(ecuacion_t *ecuacion, int cantidadEcuaciones) {
 
@@ -179,6 +233,7 @@ void verEcuaciones(ecuacion_t *ecuacion, int cantidadEcuaciones) {
     }
 }
 
+//Punto C
 void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
     int numeroArchivo = leerContador();
     FILE *pf;
@@ -218,68 +273,7 @@ void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
     limpiarConsola();
 }
 
-int leerContador(void) {
-
-    FILE *pf = fopen(ARCHIVO_CONTADOR, "rb");
-    int contador = 1;
-
-    if(!pf){
-        return -9;
-    }
-
-    if (pf) {
-        if (fread(&contador, sizeof(int), 1, pf) != 1) {
-            contador = 1;
-        }
-        fclose(pf);
-    } else {
-        // caso base cuando no hay archivo crearlo con el 1 solo
-        pf = fopen(ARCHIVO_CONTADOR, "wb");
-        if (pf) {
-            fwrite(&contador, sizeof(int), 1, pf);
-            fclose(pf);
-        } else {
-            printf("No se pudo crear %s\n", ARCHIVO_CONTADOR);
-        }
-    }
-    //Chqueo que no se vaya de rango si es 10 lo mandamos a 1
-    if (contador < 1 || contador > MAX_ARCHIVOS) contador = 1;
-    return contador;
-}
-
-void guardarContador(int contador) {
-    FILE *pf = fopen(ARCHIVO_CONTADOR, "wb");
-    if (pf) {
-        fwrite(&contador, sizeof(int), 1, pf);
-        fclose(pf);
-    } else {
-        printf("No se pudo abrir %s para escribir el contador\n", ARCHIVO_CONTADOR);
-    }
-}
-
-int abrirSesion(ecuacion_t *ecuaciones, int numeroSesion) {
-    FILE *pf;
-    char nombreArchivo[30];
-    int i = 0;
-
-    sprintf(nombreArchivo, "ecuaciones-%d.txt", numeroSesion);
-    pf = fopen(nombreArchivo, "r");
-
-    if (!pf) {
-        printf("Error al abrir %s\n", nombreArchivo);
-        return 0;
-    }
-
-    while (fgets(ecuaciones[i].cadenaOriginal, sizeof(ecuaciones[i].cadenaOriginal), pf)) {
-        ecuaciones[i].cadenaOriginal[strcspn(ecuaciones[i].cadenaOriginal, "\n")] = '\0';
-        i++;
-        if (i >= MAX_ECUACIONES) break;
-    }
-
-    fclose(pf);
-    return i;
-}
-
+//Punto D
 void leerEcuaciones(ecuacion_t *ecuaciones, int *cantEcuaciones) {
     int cantidadGuardadas = leerContador();
     int numero;
@@ -306,6 +300,7 @@ void leerEcuaciones(ecuacion_t *ecuaciones, int *cantEcuaciones) {
     printf("\nSe cargaron %d ecuaciones en la sesión actual.\n", *cantEcuaciones);
 }
 
+//Punto E
 void borrarEcuaciones(int numero) {
     char op;
     printf("Esta completamente seguro de eliminar todos los archivos? (s/n): ");
@@ -326,7 +321,7 @@ void borrarEcuaciones(int numero) {
             archivosBorrados++;
         }
     }
-
+    guardarContador(1);
     printf("Se eliminaron %d archivos.\n", archivosBorrados);
 }
 
@@ -354,9 +349,9 @@ void resolverEcuacion(ecuacion_t* ecuaciones, int* cantEcuaciones){
         for(int i = 0; i < cantTokens; i++){
             Token t = *(ecuacionActual->ecuacion + i); //CAMBIAR ESTO, LO HICE ASI PARA QUE FUNCIONE, lauti
             if(t.tipo == INCOGNITA){
-                if(t.incognita == 'x'){
+                if(tolower(t.incognita) == 'x'){
                     tieneX = 1;
-                } else if(t.incognita == 'y'){
+                } else if(tolower(t.incognita)== 'y'){
                     tieneY = 1;
                 }
             }
@@ -364,7 +359,6 @@ void resolverEcuacion(ecuacion_t* ecuaciones, int* cantEcuaciones){
         dibujarTabla(tieneX, tieneY, ecuacionActual);
     }
 }
-
 void dibujarTabla(bool tieneX, bool tieneY, ecuacion_t* ecuacion){
     int cantidadValores;
     do{
@@ -445,8 +439,9 @@ void ayuda() {
     printf("[H] Ayuda\n");
     printf("1. La calculadora tiene por ingresos solamente las letras x y \n");
     printf("2. No se puede dividir por 0\n");
-    printf("3. Los operandos validos son (+ suma) (- resta) (* multiplicacion) (/ division) (^ potencia) (~ raiz) \n");
+    printf("3. Los operandos validos son (+ suma) (- resta) (* multiplicacion) (/ division) (^ potencia) (v raiz) \n");
     printf("4. Se pueden utilizar parentesis, tenga cuidado que estos agrupan segun lo que se ingrese \n");
     printf("5. La calculadora acepta el operador de resta unario, pero al ingresarlo se lo debe distinguir de la siguiente forma:\n '-' (resta binaria), '_' (resta unaria)\n");
+    pritnf("6. Si se desea hacer una multiplicacion, esta debe aparecer de forma estrica, con el operador (*). Invalido: 7x // Pemitido: 7*x  ");
     pausa();
 }
