@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "estructuras.h"
 #include "reconocimiento.h"
 #include "dibujo.h"
@@ -9,11 +10,7 @@
 #define MAX_ECUACIONES 10
 #define ARCHIVO_CONTADOR "contador.bin"
 #define MAX_ARCHIVOS 10
-
-
-void resolverEcuacion() {
-    printf("[F] Resolver ecuacion\n");
-}
+#define MAX_VALORES 10
 
 //Funcion principal (menu)
 void dibujarInicio(){
@@ -59,7 +56,7 @@ void dibujarInicio(){
 
 
            case 'E': borrarEcuaciones(); break;
-           case 'F': resolverEcuacion(); break;
+           case 'F': resolverEcuacion(ecuaciones, &cantEcuacionesActuales); break;
            case 'H': ayuda(); break;
            case 'X': printf("Saliendo...\n"); break;
            default: printf("Opción no válida.\n");
@@ -110,6 +107,8 @@ void escribirEcuacion(ecuacion_t *ecuacion, int *posicion) {
     }
 
     strcpy(punteroEcuacion->cadenaOriginal, cadenaAux);
+    tokenizar(punteroEcuacion->cadenaOriginal, punteroEcuacion);
+    aPostfijo(punteroEcuacion);
 }
 char verificarEcuacionEscrita(char *ecuacion){
 
@@ -180,7 +179,6 @@ void verEcuaciones(ecuacion_t *ecuacion, int cantidadEcuaciones) {
     }
 }
 
-//Punto C
 void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
     int numeroArchivo = leerContador();
     FILE *pf;
@@ -282,7 +280,6 @@ int abrirSesion(ecuacion_t *ecuaciones, int numeroSesion) {
     return i;
 }
 
-//Punto D
 void leerEcuaciones(ecuacion_t *ecuaciones, int *cantEcuaciones) {
     int cantidadGuardadas = leerContador();
     int numero;
@@ -309,7 +306,6 @@ void leerEcuaciones(ecuacion_t *ecuaciones, int *cantEcuaciones) {
     printf("\nSe cargaron %d ecuaciones en la sesión actual.\n", *cantEcuaciones);
 }
 
-//Punto E
 void borrarEcuaciones(int numero) {
     char op;
     printf("Esta completamente seguro de eliminar todos los archivos? (s/n): ");
@@ -330,8 +326,117 @@ void borrarEcuaciones(int numero) {
             archivosBorrados++;
         }
     }
-    guardarContador(1);
+
     printf("Se eliminaron %d archivos.\n", archivosBorrados);
+}
+
+//PUNTO F
+void resolverEcuacion(ecuacion_t* ecuaciones, int* cantEcuaciones){
+    int nroEcuacion, nroOperacion;
+    bool tieneX = 0;
+    bool tieneY = 0;
+    verEcuaciones(ecuaciones, *cantEcuaciones);
+    do{
+        printf("Selecciona una de las ecuaciones mostradas para resolver: \n");
+        scanf("%d", &nroEcuacion);
+    }while(nroEcuacion<1 || nroEcuacion > *cantEcuaciones);
+    limpiarConsola();
+    ecuacion_t* ecuacionActual = ecuaciones + nroEcuacion - 1;
+    printf("Seleccione el tipo de resolucion para la ecuacion: %s\n", ecuacionActual->cadenaOriginal);
+    printf("1- Ingresar una tabla de valores\n");
+    printf("2- Ingresar un valor y generar el resto de la tabla\n");
+    do{
+        scanf("%d", &nroOperacion);
+    }while(nroOperacion != 1 && nroOperacion != 2);
+    printf("Opcion seleccionada: %d\n", nroOperacion);
+    int cantTokens = ecuacionActual->cantTokens;
+    if(nroOperacion == 1){
+        for(int i = 0; i < cantTokens; i++){
+            Token t = *(ecuacionActual->ecuacion + i); //CAMBIAR ESTO, LO HICE ASI PARA QUE FUNCIONE, lauti
+            if(t.tipo == INCOGNITA){
+                if(t.incognita == 'x'){
+                    tieneX = 1;
+                } else if(t.incognita == 'y'){
+                    tieneY = 1;
+                }
+            }
+        }
+        dibujarTabla(tieneX, tieneY, ecuacionActual);
+    }
+}
+
+void dibujarTabla(bool tieneX, bool tieneY, ecuacion_t* ecuacion){
+    int cantidadValores;
+    do{
+        printf("¿Cuantos valores quiere darle a la incognita? (El maximo es %d)\n", MAX_VALORES);
+        scanf("%d", &cantidadValores);
+    }while(cantidadValores < 1 || cantidadValores > MAX_VALORES);
+    float* valoresX = NULL;
+    float* valoresY = NULL;
+    if(tieneX){
+        valoresX = malloc(sizeof(float) * cantidadValores);
+        if (valoresX == NULL) {
+            printf("Error: No hay memoria.\n");
+            return;
+        }
+        printf("Ingrese los valores para reemplazar x:\n");
+        for(int i = 0; i<cantidadValores; i++){
+            printf("Valor %d: \n", i+1);
+            scanf("%f", valoresX + i);
+        }
+    }
+    if(tieneY){
+        valoresY = malloc(sizeof(float) * cantidadValores);
+        if (valoresY == NULL) {
+            printf("Error: No hay memoria.\n");
+            return;
+        }
+        printf("Ingrese los valores para reemplazar y:\n");
+        for(int i = 0; i<cantidadValores; i++){
+            printf("Valor %d: \n", i+1);
+            scanf("%f", valoresY + i);
+        }
+    }
+    limpiarConsola();
+
+    printf("Ecuacion: %s\n", ecuacion->cadenaOriginal);
+    printf("\n================ TABLA DE RESULTADOS =================\n");
+
+    if (tieneX) {
+        printf("%-15s", "Valor X");
+    }
+    if (tieneY) {
+        printf("%-15s", "Valor Y");
+    }
+    printf("%15s\n", "Resultado");
+
+    printf("----------------------------------------------\n");
+
+    for (int i = 0; i < cantidadValores; i++) {
+
+        float valX_fila = 0.0f;
+        float valY_fila = 0.0f;
+
+        if (tieneX) {
+            valX_fila = valoresX[i];
+        }
+        if (tieneY) {
+            valY_fila = valoresY[i];
+        }
+
+        float resultado = resolverEcuacionEvaluada(ecuacion, valX_fila, valY_fila);
+
+        if (tieneX) {
+            printf("%-15.2f", valX_fila);
+        }
+        if (tieneY) {
+            printf("%-15.2f", valY_fila);
+        }
+        printf("%15.2f\n", resultado);
+    }
+    printf("=====================================================\n");
+    free(valoresX);
+    free(valoresY);
 }
 
 //Punto H
@@ -342,5 +447,6 @@ void ayuda() {
     printf("2. No se puede dividir por 0\n");
     printf("3. Los operandos validos son (+ suma) (- resta) (* multiplicacion) (/ division) (^ potencia) (~ raiz) \n");
     printf("4. Se pueden utilizar parentesis, tenga cuidado que estos agrupan segun lo que se ingrese \n");
+    printf("5. La calculadora acepta el operador de resta unario, pero al ingresarlo se lo debe distinguir de la siguiente forma:\n '-' (resta binaria), '_' (resta unaria)\n");
     pausa();
 }
