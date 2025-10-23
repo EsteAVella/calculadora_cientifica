@@ -144,7 +144,7 @@ void escribirEcuacion(ecuacion_t *ecuacion, int *posicion) {
     //ponerle posicion, ya que en ese numero se guardara la nueva ecuacion.
 
     char cadenaAux[50];
-    char permitido='0';
+    char permitido='0', opcionAyuda, opcionEdicion;
 
     ecuacion_t *punteroEcuacion=ecuacion;
 
@@ -156,9 +156,23 @@ void escribirEcuacion(ecuacion_t *ecuacion, int *posicion) {
         printf("Ingrese la ecuacion: ");
         fgets(cadenaAux,sizeof(cadenaAux),stdin);
         permitido=verificarEcuacionEscrita(cadenaAux);
-        //limpiar pantalla, mostrar la ecuacion escrita
-        //Preguntar si desea editarla.
-        //Si es afirmativo, lo envia a una funcion en donde se carga cadenaaAux, y se reescribe.
+
+        if(permitido=='0'){
+            printf("\nLa ecuacion escrita es invalida. Desea ver la AYUDA? s/n: ");
+            scanf(" %c", &opcionAyuda);
+            if(tolower(opcionAyuda)=='s')
+                ayuda();
+        }
+    }
+
+    limpiarConsola();
+    printf("\n La ecuacion ingresada es: %s", cadenaAux);
+    printf("\nDesea editarla (s/n)? ");
+    scanf(" %c", &opcionEdicion);
+    limpiarBufferEntrada();
+    if(tolower(opcionEdicion)=='s'){
+        edicionEcuacion(cadenaAux);
+        printf("\n La nueva ecuacion ingresada es: %s", cadenaAux);
     }
 
     strcpy(punteroEcuacion->cadenaOriginal, cadenaAux);
@@ -177,6 +191,23 @@ char verificarEcuacionEscrita(char *ecuacion){
     }
     *punteroChar='\0';
     return '1';
+}
+void edicionEcuacion(char* ecuacionAnterior){
+    char nuevaEcuacion[50];
+    char permitido='0';
+
+    do{
+        printf("\nIngrese la nueva ecuacion: ");
+        fgets(nuevaEcuacion,sizeof(nuevaEcuacion),stdin);
+
+        if (nuevaEcuacion[0] == '\n') {
+            printf("No se realizaron cambios. Se mantiene la ecuacion anterior.\n");
+            return;
+        }
+        permitido=verificarEcuacionEscrita(nuevaEcuacion);
+    }while(permitido=='0');
+
+    strcpy(ecuacionAnterior, nuevaEcuacion);
 }
 void eliminarEcuacion(ecuacion_t *ecuaciones, int *cantEcuaciones) {
 
@@ -442,6 +473,6 @@ void ayuda() {
     printf("3. Los operandos validos son (+ suma) (- resta) (* multiplicacion) (/ division) (^ potencia) (v raiz) \n");
     printf("4. Se pueden utilizar parentesis, tenga cuidado que estos agrupan segun lo que se ingrese \n");
     printf("5. La calculadora acepta el operador de resta unario, pero al ingresarlo se lo debe distinguir de la siguiente forma:\n '-' (resta binaria), '_' (resta unaria)\n");
-    pritnf("6. Si se desea hacer una multiplicacion, esta debe aparecer de forma estrica, con el operador (*). Invalido: 7x // Pemitido: 7*x  ");
+    printf("6. Si se desea hacer una multiplicacion, esta debe aparecer de forma estrica, con el operador (*). Invalido: 7x // Pemitido: 7*x \n");
     pausa();
 }

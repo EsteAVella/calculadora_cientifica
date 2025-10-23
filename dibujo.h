@@ -18,6 +18,7 @@ int abrirSesion(ecuacion_t*, int);
 //Punto A
 void escribirEcuacion(ecuacion_t*, int*);
 char verificarEcuacionEscrita(char*);
+void edicionEcuacion(char*);
 void eliminarEcuacion(ecuacion_t*, int*);
 
 //Punto B
