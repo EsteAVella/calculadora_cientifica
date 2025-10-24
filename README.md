@@ -28,3 +28,34 @@ Enumeración que define los tipos posibles de tokens:
 - `DIGITO` (0): Representa números
 - `OPERACION` (1): Representa operadores matemáticos
 - `INCOGNITA` (2): Representa variables/incógnitas
+
+
+# reconocimiento.h
+
+En este archivo se toma la cadena original de la ecuación, y se convierte cada carácter, en un tipo de dato manejable en operaciones.
+### **`tokenizar`**
+**Propósito:** Convierte una ecuación en texto a tokens estructurados.
+
+**Parámetros:**
+
+- `char *cadena`: Ecuación del usuario.
+- `ecuacion_t *ecu`: Donde se guardan los tokens.
+
+**Proceso:**
+
+1. Guarda la cadena original.
+2. Recorre carácter por carácter, creando un  dato del TipoToken para c/u:
+    - **Dígitos:** Agrupa varios dígitos en un número (usa `atoi`)
+    - **Operaciones/Incógnitas:** Crea un token individual por cada uno
+3. Almacena cada token en `ecuacion[]` y actualiza `cantTokens`
+
+
+### **`mostrarTokens`** y  **`mostrarPostfija`**
+**Propósito**: Mostrar el resultado de la función **`tokenizar`** y **`aPostfijo`** (esta última se encuentra en otro archivo).
+
+**Parámetros**: 
+- `ecuacion_t *ecu`
+
+**Proceso**:
+1. Itera un numero de veces equivalente a la cantidad de Tokens que tenga la ecuación.
+2. En cada iteración decide que tipo de Token es, y muestra en pantalla en base a esa información.
