@@ -35,7 +35,7 @@ void borrarEcuaciones();
 
 //PUNTO F
 void resolverEcuacion(ecuacion_t*,int*);
-void dibujarTabla(bool, bool, ecuacion_t*);
+void dibujarTabla(bool, bool, ecuacion_t*, int);
 
 //Punto H
 void ayuda();

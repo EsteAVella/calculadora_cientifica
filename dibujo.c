@@ -376,50 +376,78 @@ void resolverEcuacion(ecuacion_t* ecuaciones, int* cantEcuaciones){
     }while(nroOperacion != 1 && nroOperacion != 2);
     printf("Opcion seleccionada: %d\n", nroOperacion);
     int cantTokens = ecuacionActual->cantTokens;
-    if(nroOperacion == 1){
-        for(int i = 0; i < cantTokens; i++){
-            Token t = *(ecuacionActual->ecuacion + i); //CAMBIAR ESTO, LO HICE ASI PARA QUE FUNCIONE, lauti
-            if(t.tipo == INCOGNITA){
-                if(tolower(t.incognita) == 'x'){
-                    tieneX = 1;
-                } else if(tolower(t.incognita)== 'y'){
-                    tieneY = 1;
-                }
+    for(int i = 0; i < cantTokens; i++){
+        Token t = *(ecuacionActual->ecuacion + i);
+        if(t.tipo == INCOGNITA){
+            if(tolower(t.incognita) == 'x'){
+                tieneX = 1;
+            } else if(tolower(t.incognita)== 'y'){
+                tieneY = 1;
             }
         }
-        dibujarTabla(tieneX, tieneY, ecuacionActual);
     }
+    dibujarTabla(tieneX, tieneY, ecuacionActual, nroOperacion);
 }
-void dibujarTabla(bool tieneX, bool tieneY, ecuacion_t* ecuacion){
+void dibujarTabla(bool tieneX, bool tieneY, ecuacion_t* ecuacion, int nroOperacion){
     int cantidadValores;
-    do{
-        printf("¿Cuantos valores quiere darle a la incognita? (El maximo es %d)\n", MAX_VALORES);
-        scanf("%d", &cantidadValores);
-    }while(cantidadValores < 1 || cantidadValores > MAX_VALORES);
     float* valoresX = NULL;
     float* valoresY = NULL;
-    if(tieneX){
-        valoresX = malloc(sizeof(float) * cantidadValores);
-        if (valoresX == NULL) {
-            printf("Error: No hay memoria.\n");
-            return;
+    if(nroOperacion == 1){
+        do{
+            printf("¿Cuantos valores quiere darle a la incognita? (El maximo es %d)\n", MAX_VALORES);
+            scanf("%d", &cantidadValores);
+        }while(cantidadValores < 1 || cantidadValores > MAX_VALORES);
+        if(tieneX){
+            valoresX = malloc(sizeof(float) * cantidadValores);
+            if (valoresX == NULL) {
+                printf("Error: No hay memoria.\n");
+                return;
+            }
+            printf("Ingrese los valores para reemplazar x:\n");
+            for(int i = 0; i<cantidadValores; i++){
+                printf("Valor %d: \n", i+1);
+                scanf("%f", valoresX + i);
+            }
         }
-        printf("Ingrese los valores para reemplazar x:\n");
-        for(int i = 0; i<cantidadValores; i++){
-            printf("Valor %d: \n", i+1);
-            scanf("%f", valoresX + i);
+        if(tieneY){
+            valoresY = malloc(sizeof(float) * cantidadValores);
+            if (valoresY == NULL) {
+                printf("Error: No hay memoria.\n");
+                return;
+            }
+            printf("Ingrese los valores para reemplazar y:\n");
+            for(int i = 0; i<cantidadValores; i++){
+                printf("Valor %d: \n", i+1);
+                scanf("%f", valoresY + i);
+            }
         }
-    }
-    if(tieneY){
-        valoresY = malloc(sizeof(float) * cantidadValores);
-        if (valoresY == NULL) {
-            printf("Error: No hay memoria.\n");
-            return;
+    } else if(nroOperacion == 2){
+        cantidadValores = 11;
+        if(tieneX){
+            valoresX = malloc(sizeof(float) * cantidadValores);
+            if (valoresX == NULL) {
+                printf("Error: No hay memoria.\n");
+                return;
+            }
+            float valorCentralX;
+            printf("Ingrese un valor para reemplazar a x:\n");
+            scanf("%f", &valorCentralX);
+            for(int i = 0; i < 11; i++){
+                *(valoresX + i) = valorCentralX + (i - 5);
+            }
         }
-        printf("Ingrese los valores para reemplazar y:\n");
-        for(int i = 0; i<cantidadValores; i++){
-            printf("Valor %d: \n", i+1);
-            scanf("%f", valoresY + i);
+        if(tieneY){
+            valoresY = malloc(sizeof(float) * cantidadValores);
+            if (valoresY == NULL) {
+                printf("Error: No hay memoria.\n");
+                return;
+            }
+            float valorCentralY;
+            printf("Ingrese un valor para reemplazar a y:\n");
+            scanf("%f", &valorCentralY);
+            for(int i = 0; i < 11; i++){
+                *(valoresY + i) = valorCentralY + (i - 5);
+            }
         }
     }
     limpiarConsola();
