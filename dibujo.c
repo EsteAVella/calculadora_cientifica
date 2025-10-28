@@ -471,10 +471,10 @@ void dibujarTabla(bool tieneX, bool tieneY, ecuacion_t* ecuacion, int nroOperaci
         float valY_fila = 0.0f;
 
         if (tieneX) {
-            valX_fila = valoresX[i];
+            valX_fila = *(valoresX + i);
         }
         if (tieneY) {
-            valY_fila = valoresY[i];
+            valY_fila = *(valoresY + i);
         }
 
         float resultado = resolverEcuacionEvaluada(ecuacion, valX_fila, valY_fila);
