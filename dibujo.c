@@ -277,6 +277,11 @@ void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
     ecuacion_t *punteroEcuacion;
     punteroEcuacion = ecuacion;
 
+    if(*cant==0){
+        printf("No hay ecuaciones cargadas en esta sesion.");
+        return;
+    }
+
     int cantidadActual = contarSesionesGuardadas();
     if(cantidadActual >= MAX_ARCHIVOS){
         printf("Ya hay %d sesiones guardadas. Elimine antes de guardar otra.\n",MAX_ARCHIVOS);
