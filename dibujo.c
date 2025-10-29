@@ -11,6 +11,7 @@
 #define ARCHIVO_CONTADOR "contador.bin"
 #define MAX_ARCHIVOS 10
 #define MAX_VALORES 10
+#define LISTA_ARCHIVO "nombreArchivos.txt"
 
 //Funcion principal (menu)
 void dibujarInicio(){
@@ -105,6 +106,7 @@ int leerContador(void) {
     if (contador < 1 || contador > MAX_ARCHIVOS) contador = 1;
     return contador;
 }
+
 void guardarContador(int contador) {
     FILE *pf = fopen(ARCHIVO_CONTADOR, "wb");
     if (pf) {
@@ -114,6 +116,7 @@ void guardarContador(int contador) {
         printf("No se pudo abrir %s para escribir el contador\n", ARCHIVO_CONTADOR);
     }
 }
+
 int abrirSesion(ecuacion_t *ecuaciones, int numeroSesion) {
     FILE *pf;
     char nombreArchivo[30];
@@ -179,6 +182,7 @@ void escribirEcuacion(ecuacion_t *ecuacion, int *posicion) {
     tokenizar(punteroEcuacion->cadenaOriginal, punteroEcuacion);
     aPostfijo(punteroEcuacion);
 }
+
 char verificarEcuacionEscrita(char *ecuacion){
 
     char *punteroChar=ecuacion;
@@ -192,6 +196,7 @@ char verificarEcuacionEscrita(char *ecuacion){
     *punteroChar='\0';
     return '1';
 }
+
 void edicionEcuacion(char* ecuacionAnterior){
     char nuevaEcuacion[50];
     char permitido='0';
@@ -209,6 +214,7 @@ void edicionEcuacion(char* ecuacionAnterior){
 
     strcpy(ecuacionAnterior, nuevaEcuacion);
 }
+
 void eliminarEcuacion(ecuacion_t *ecuaciones, int *cantEcuaciones) {
 
     int posicion;
@@ -266,18 +272,26 @@ void verEcuaciones(ecuacion_t *ecuacion, int cantidadEcuaciones) {
 
 //Punto C
 void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
-    int numeroArchivo = leerContador();
-    FILE *pf;
 
-    char nombreArchivo[30];
+    FILE *pf;
     ecuacion_t *punteroEcuacion;
     punteroEcuacion = ecuacion;
 
-    sprintf(nombreArchivo,"ecuaciones-%d.txt",numeroArchivo);
+    int cantidadActual = contarSesionesGuardadas();
+    if(cantidadActual >= MAX_ARCHIVOS){
+        printf("Ya hay %d sesiones guardadas. Elimine antes de guardar otra.\n",MAX_ARCHIVOS);
+        pausa();
+        limpiarBufferEntrada();
+        return;
+    }
+
+    char *nombreArchivo = pedirNombreArchivo();
+    if(!nombreArchivo) return;
 
     pf = fopen(nombreArchivo,"w");
     if(!pf){
         printf("Error al abrir el archivo");
+        free(nombreArchivo);
         return;
     }
 
@@ -289,46 +303,76 @@ void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
 
     printf("la sesion fue guardada correctamente en %s \n",nombreArchivo);
 
+    //guardamos los nombres en el archivo aux
+
+    guardarNombre(nombreArchivo);
+
     for(int i = 0; i < *cant; i++){
         ecuacion[i].cadenaOriginal[0] = '\0';
     }
 
     *cant = 0;
-    numeroArchivo++;
-    if (numeroArchivo > MAX_ARCHIVOS) numeroArchivo = 1;
-    guardarContador(numeroArchivo);
-    printf("Sesion actual reiniciada\n");
 
-    limpiarBufferEntrada();
+    free(nombreArchivo);
+
+    printf("Sesion actual reiniciada\n");
     pausa();
+    limpiarBufferEntrada();
     limpiarConsola();
 }
 
 //Punto D
 void leerEcuaciones(ecuacion_t *ecuaciones, int *cantEcuaciones) {
-    int cantidadGuardadas = leerContador();
-    int numero;
+    FILE *registro = fopen(LISTA_ARCHIVO,"r");
 
-    if (cantidadGuardadas <= 0) {
+    if(!registro){
+        printf("No hay sesiones guardadas.\n");
+        return;
+    }
+    char nombres [10][100];
+    int total = 0;
+
+    while (fgets(nombres[total], sizeof(nombres[total]), registro) && total < 10) {
+        nombres[total][strcspn(nombres[total], "\n")] = '\0';
+        total++;
+    }
+
+    fclose(registro);
+
+    if (total == 0) {
         printf("No hay sesiones guardadas.\n");
         return;
     }
 
-    printf("\n=== SESIONES GUARDADAS ===\n");
-    for (int i = 1; i <= cantidadGuardadas; i++) {
-        printf("[%d] ecuaciones-%d.txt\n", i, i);
-    }
+    int numero;
 
+    listarSesionesGuardadas();
     printf("\nSeleccione el número de sesión que desea abrir: ");
     scanf("%d", &numero);
+    limpiarBufferEntrada();
 
-    if (numero < 1 || numero > cantidadGuardadas) {
+    if (numero < 1 || numero > total) {
         printf("Número inválido.\n");
         return;
     }
 
-    *cantEcuaciones = abrirSesion(ecuaciones, numero);
-    printf("\nSe cargaron %d ecuaciones en la sesión actual.\n", *cantEcuaciones);
+    FILE *pf = fopen(nombres[numero - 1], "r");
+    if (!pf) {
+        printf("Error al abrir el archivo %s\n", nombres[numero - 1]);
+        return;
+    }
+
+    *cantEcuaciones = 0;
+    char linea[100];
+    while (fgets(linea, sizeof(linea), pf) && *cantEcuaciones < MAX_ECUACIONES) {
+        linea[strcspn(linea, "\n")] = '\0';
+        strcpy(ecuaciones[*cantEcuaciones].cadenaOriginal, linea);
+        (*cantEcuaciones)++;
+    }
+    fclose(pf);
+
+    printf("\nSe cargaron %d ecuaciones desde '%s'.\n", *cantEcuaciones, nombres[numero - 1]);
+    pausa();
 }
 
 //Punto E
@@ -342,18 +386,25 @@ void borrarEcuaciones(int numero) {
         printf("No se eliminaron los archivos.\n");
         return; // salir de la función
     }
+    FILE *registro = fopen(LISTA_ARCHIVO, "r");
+    if (!registro) {
+        printf("No hay sesiones guardadas.\n");
+        return;
+    }
 
-    int archivosBorrados = 0;
-    char nombreArchivo[30];
-
-    for (int i = 1; i <= MAX_ARCHIVOS; i++) {
-        sprintf(nombreArchivo, "ecuaciones-%d.txt", i);
+    char nombreArchivo[100];
+    int borrados = 0;
+    while (fgets(nombreArchivo, sizeof(nombreArchivo), registro)) {
+        nombreArchivo[strcspn(nombreArchivo, "\n")] = '\0';
         if (remove(nombreArchivo) == 0) {
-            archivosBorrados++;
+            borrados++;
         }
     }
-    guardarContador(1);
-    printf("Se eliminaron %d archivos.\n", archivosBorrados);
+    fclose(registro);
+
+    remove(LISTA_ARCHIVO); // borra también el registro de nombres
+
+    printf("Se eliminaron %d archivos de sesión.\n", borrados);
 }
 
 //PUNTO F
@@ -503,4 +554,60 @@ void ayuda() {
     printf("5. La calculadora acepta el operador de resta unario, pero al ingresarlo se lo debe distinguir de la siguiente forma:\n '-' (resta binaria), '_' (resta unaria)\n");
     printf("6. Si se desea hacer una multiplicacion, esta debe aparecer de forma estrica, con el operador (*). Invalido: 7x // Pemitido: 7*x \n");
     pausa();
+}
+
+char* pedirNombreArchivo(){
+
+    char buffer[100];
+    printf("Ingrese nombre para el archivo de texto: ");
+    scanf("%99s",buffer);
+
+    char *nombre = malloc(strlen(buffer)+5);
+    if(!nombre){
+        printf("Error al reservar memoria.\n");
+        return NULL;
+    }
+    sprintf(nombre,"%s.txt",buffer);
+
+    return nombre;
+}
+
+void listarSesionesGuardadas() {
+    FILE *registro = fopen(LISTA_ARCHIVO, "r");
+    if (!registro) {
+        printf("No hay sesiones guardadas aún.\n");
+        return;
+    }
+
+    char nombre[100];
+    int i = 1;
+    printf("\n=== SESIONES GUARDADAS ===\n");
+    while (fscanf(registro, "%99s", nombre) == 1) {
+        printf("[%d] %s\n", i++, nombre);
+    }
+
+    fclose(registro);
+}
+
+int contarSesionesGuardadas() {
+    FILE *registro = fopen(LISTA_ARCHIVO, "r");
+    if (!registro) return 0; // si no existe, aún no hay sesiones
+
+    int contador = 0;
+    char buffer[100];
+    while (fgets(buffer, sizeof(buffer), registro)) {
+        contador++;
+    }
+
+    fclose(registro);
+    return contador;
+}
+
+void guardarNombre(char* nombreArchivo){
+
+    FILE *registro = fopen(LISTA_ARCHIVO,"a");
+    if(registro){
+        fprintf(registro,"%s\n",nombreArchivo);
+        fclose(registro);
+    }
 }

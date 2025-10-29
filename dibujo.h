@@ -14,6 +14,10 @@ void limpiarBufferEntrada();
 int  leerContador();
 void guardarContador(int);
 int abrirSesion(ecuacion_t*, int);
+void guardarNombre(char*);
+int contarSesionesGuardadas();
+void listarSesionesGuardadas();
+char* pedirNombreArchivo();
 
 //Punto A
 void escribirEcuacion(ecuacion_t*, int*);
