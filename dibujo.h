@@ -1,7 +1,6 @@
 #ifndef DIBUJO_H_INCLUDED
 #define DIBUJO_H_INCLUDED
 
-#include <stdbool.h>
 #include "conversion.h"
 
 //Funcion principal (menu)
@@ -20,7 +19,7 @@ void listarSesionesGuardadas();
 char* pedirNombreArchivo();
 
 //Punto A
-void escribirEcuacion(ecuacion_t*, int*);
+int escribirEcuacion(ecuacion_t*, int*);
 char verificarEcuacionEscrita(char*);
 void edicionEcuacion(char*);
 void eliminarEcuacion(ecuacion_t*, int*);
@@ -39,7 +38,7 @@ void borrarEcuaciones();
 
 //PUNTO F
 void resolverEcuacion(ecuacion_t*,int*);
-void dibujarTabla(bool, bool, ecuacion_t*, int);
+void dibujarTabla(int, int, ecuacion_t*, int);
 
 //Punto H
 void ayuda();

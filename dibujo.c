@@ -2,7 +2,6 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include "estructuras.h"
 #include "reconocimiento.h"
 #include "dibujo.h"
@@ -38,9 +37,10 @@ void dibujarInicio(){
 
         switch(opcion) {
            case 'A':
-                    if(cantEcuacionesActuales<=MAX_ECUACIONES-1){
-                        escribirEcuacion(ecuaciones, &cantEcuacionesActuales);
-                        cantEcuacionesActuales++;
+                    if (cantEcuacionesActuales <= MAX_ECUACIONES - 1) {
+                        if (escribirEcuacion(ecuaciones, &cantEcuacionesActuales)) {
+                            cantEcuacionesActuales++;
+                        }
                     }else{
                         eliminarEcuacion(ecuaciones, &cantEcuacionesActuales);
                     }
@@ -80,13 +80,10 @@ void limpiarBufferEntrada() {
 //Funciones compartidas entre C, D, E
 int leerContador(void) {
 
-    FILE *pf = fopen(ARCHIVO_CONTADOR, "rb");
+    FILE *pf;
     int contador = 1;
 
-    if(!pf){
-        return -9;
-    }
-
+    pf = fopen(ARCHIVO_CONTADOR, "rb");
     if (pf) {
         if (fread(&contador, sizeof(int), 1, pf) != 1) {
             contador = 1;
@@ -100,6 +97,7 @@ int leerContador(void) {
             fclose(pf);
         } else {
             printf("No se pudo crear %s\n", ARCHIVO_CONTADOR);
+            return -9;
         }
     }
     //Chqueo que no se vaya de rango si es 10 lo mandamos a 1
@@ -130,8 +128,8 @@ int abrirSesion(ecuacion_t *ecuaciones, int numeroSesion) {
         return 0;
     }
 
-    while (fgets(ecuaciones[i].cadenaOriginal, sizeof(ecuaciones[i].cadenaOriginal), pf)) {
-        ecuaciones[i].cadenaOriginal[strcspn(ecuaciones[i].cadenaOriginal, "\n")] = '\0';
+    while (fgets((ecuaciones + i)->cadenaOriginal, sizeof((ecuaciones + i)->cadenaOriginal), pf)) {
+        (ecuaciones + i)->cadenaOriginal[strcspn((ecuaciones + i)->cadenaOriginal, "\n")] = '\0';
         i++;
         if (i >= MAX_ECUACIONES) break;
     }
@@ -141,14 +139,13 @@ int abrirSesion(ecuacion_t *ecuaciones, int numeroSesion) {
 }
 
 //Punto A
-void escribirEcuacion(ecuacion_t *ecuacion, int *posicion) {
+int escribirEcuacion(ecuacion_t *ecuacion, int *posicion) {
 
     //posicion es la cant. de ecuaciones cargadas, pero me parecio mas claro
     //ponerle posicion, ya que en ese numero se guardara la nueva ecuacion.
 
     char cadenaAux[50];
     char permitido='0', opcionAyuda, opcionEdicion;
-
     ecuacion_t *punteroEcuacion=ecuacion;
 
     punteroEcuacion = punteroEcuacion + (*posicion);
@@ -180,7 +177,19 @@ void escribirEcuacion(ecuacion_t *ecuacion, int *posicion) {
 
     strcpy(punteroEcuacion->cadenaOriginal, cadenaAux);
     tokenizar(punteroEcuacion->cadenaOriginal, punteroEcuacion);
-    aPostfijo(punteroEcuacion);
+
+    if (!validarTokens(punteroEcuacion)) {
+        printf("\nError: la ecuacion escrita tiene errores de sintaxis (por ejemplo '3x' o '+-+').\n");
+        return 0;
+    }
+
+    if (aPostfijo(punteroEcuacion) == 0) {
+        printf("\nError de sintaxis: la ecuacion no se pudo procesar correctamente.\n");
+        return 0;
+    }
+
+    mostrarTokens(punteroEcuacion);
+    return 1;
 }
 
 char verificarEcuacionEscrita(char *ecuacion){
@@ -219,6 +228,7 @@ void eliminarEcuacion(ecuacion_t *ecuaciones, int *cantEcuaciones) {
 
     int posicion;
     ecuacion_t *punteroEcuacion=ecuaciones;
+    int i;
 
     printf("Lista de ecuaciones\n");
     verEcuaciones(ecuaciones, *cantEcuaciones);
@@ -237,8 +247,8 @@ void eliminarEcuacion(ecuacion_t *ecuaciones, int *cantEcuaciones) {
     posicion--;
 
     // Desplazar las ecuaciones siguientes una posición hacia arriba
-    for (int i = posicion; i < *cantEcuaciones - 1; i++) {
-        punteroEcuacion[i] = punteroEcuacion[i+1];
+    for (i = posicion; i < *cantEcuaciones - 1; i++) {
+        *(punteroEcuacion + i) = *(punteroEcuacion + i + 1);
     }
 
     //Ahora queda limpiar el ultimo lugar, el cual esta repetido, despues de haber corrido todo
@@ -275,6 +285,10 @@ void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
 
     FILE *pf;
     ecuacion_t *punteroEcuacion;
+    int cantidadActual;
+    char *nombreArchivo;
+    int i;
+
     punteroEcuacion = ecuacion;
 
     if(*cant==0){
@@ -282,7 +296,7 @@ void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
         return;
     }
 
-    int cantidadActual = contarSesionesGuardadas();
+    cantidadActual = contarSesionesGuardadas();
     if(cantidadActual >= MAX_ARCHIVOS){
         printf("Ya hay %d sesiones guardadas. Elimine antes de guardar otra.\n",MAX_ARCHIVOS);
         pausa();
@@ -290,7 +304,7 @@ void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
         return;
     }
 
-    char *nombreArchivo = pedirNombreArchivo();
+    nombreArchivo = pedirNombreArchivo();
     if(!nombreArchivo) return;
 
     pf = fopen(nombreArchivo,"w");
@@ -300,7 +314,7 @@ void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
         return;
     }
 
-    for(int i = 0; i < *cant; i++){
+    for(i = 0; i < *cant; i++){
         fprintf(pf,"%s\n", punteroEcuacion->cadenaOriginal);
         punteroEcuacion++;
     }
@@ -312,8 +326,8 @@ void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
 
     guardarNombre(nombreArchivo);
 
-    for(int i = 0; i < *cant; i++){
-        ecuacion[i].cadenaOriginal[0] = '\0';
+    for(i = 0; i < *cant; i++){
+        (ecuacion + i)->cadenaOriginal[0] = '\0';
     }
 
     *cant = 0;
@@ -328,14 +342,19 @@ void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
 
 //Punto D
 void leerEcuaciones(ecuacion_t *ecuaciones, int *cantEcuaciones) {
-    FILE *registro = fopen(LISTA_ARCHIVO,"r");
+    FILE *registro;
+    char nombres [10][100];
+    int total = 0;
+    int numero;
+    FILE *pf;
+    char linea[100];
+
+    registro = fopen(LISTA_ARCHIVO,"r");
 
     if(!registro){
         printf("No hay sesiones guardadas.\n");
         return;
     }
-    char nombres [10][100];
-    int total = 0;
 
     while (fgets(nombres[total], sizeof(nombres[total]), registro) && total < 10) {
         nombres[total][strcspn(nombres[total], "\n")] = '\0';
@@ -349,8 +368,6 @@ void leerEcuaciones(ecuacion_t *ecuaciones, int *cantEcuaciones) {
         return;
     }
 
-    int numero;
-
     listarSesionesGuardadas();
     printf("\nSeleccione el número de sesión que desea abrir: ");
     scanf("%d", &numero);
@@ -361,17 +378,16 @@ void leerEcuaciones(ecuacion_t *ecuaciones, int *cantEcuaciones) {
         return;
     }
 
-    FILE *pf = fopen(nombres[numero - 1], "r");
+    *cantEcuaciones = 0; //muevo el reseteador aca x si hay error al abrir el archivo, que no quede mal el contador
+    pf = fopen(nombres[numero - 1], "r");
     if (!pf) {
         printf("Error al abrir el archivo %s\n", nombres[numero - 1]);
         return;
     }
 
-    *cantEcuaciones = 0;
-    char linea[100];
     while (fgets(linea, sizeof(linea), pf) && *cantEcuaciones < MAX_ECUACIONES) {
         linea[strcspn(linea, "\n")] = '\0';
-        strcpy(ecuaciones[*cantEcuaciones].cadenaOriginal, linea);
+        strcpy((ecuaciones + *cantEcuaciones)->cadenaOriginal, linea);
         (*cantEcuaciones)++;
     }
     fclose(pf);
@@ -381,8 +397,12 @@ void leerEcuaciones(ecuacion_t *ecuaciones, int *cantEcuaciones) {
 }
 
 //Punto E
-void borrarEcuaciones(int numero) {
+void borrarEcuaciones(void) {
     char op;
+    FILE *registro;
+    char nombreArchivo[100];
+    int borrados = 0;
+
     printf("Esta completamente seguro de eliminar todos los archivos? (s/n): ");
     op = getchar();
     limpiarBufferEntrada(); // para limpiar el ENTER que queda en el buffer
@@ -391,14 +411,12 @@ void borrarEcuaciones(int numero) {
         printf("No se eliminaron los archivos.\n");
         return; // salir de la función
     }
-    FILE *registro = fopen(LISTA_ARCHIVO, "r");
+    registro = fopen(LISTA_ARCHIVO, "r");
     if (!registro) {
         printf("No hay sesiones guardadas.\n");
         return;
     }
 
-    char nombreArchivo[100];
-    int borrados = 0;
     while (fgets(nombreArchivo, sizeof(nombreArchivo), registro)) {
         nombreArchivo[strcspn(nombreArchivo, "\n")] = '\0';
         if (remove(nombreArchivo) == 0) {
@@ -415,15 +433,20 @@ void borrarEcuaciones(int numero) {
 //PUNTO F
 void resolverEcuacion(ecuacion_t* ecuaciones, int* cantEcuaciones){
     int nroEcuacion, nroOperacion;
-    bool tieneX = 0;
-    bool tieneY = 0;
+    int tieneX = 0;
+    int tieneY = 0;
+    ecuacion_t* ecuacionActual;
+    int cantTokens;
+    int i;
+    Token t;
+
     verEcuaciones(ecuaciones, *cantEcuaciones);
     do{
         printf("Selecciona una de las ecuaciones mostradas para resolver: \n");
         scanf("%d", &nroEcuacion);
     }while(nroEcuacion<1 || nroEcuacion > *cantEcuaciones);
     limpiarConsola();
-    ecuacion_t* ecuacionActual = ecuaciones + nroEcuacion - 1;
+    ecuacionActual = ecuaciones + nroEcuacion - 1;
     printf("Seleccione el tipo de resolucion para la ecuacion: %s\n", ecuacionActual->cadenaOriginal);
     printf("1- Ingresar una tabla de valores\n");
     printf("2- Ingresar un valor y generar el resto de la tabla\n");
@@ -431,9 +454,9 @@ void resolverEcuacion(ecuacion_t* ecuaciones, int* cantEcuaciones){
         scanf("%d", &nroOperacion);
     }while(nroOperacion != 1 && nroOperacion != 2);
     printf("Opcion seleccionada: %d\n", nroOperacion);
-    int cantTokens = ecuacionActual->cantTokens;
-    for(int i = 0; i < cantTokens; i++){
-        Token t = *(ecuacionActual->ecuacion + i);
+    cantTokens = ecuacionActual->cantTokens;
+    for(i = 0; i < cantTokens; i++){
+        t = *(ecuacionActual->ecuacion + i);
         if(t.tipo == INCOGNITA){
             if(tolower(t.incognita) == 'x'){
                 tieneX = 1;
@@ -444,10 +467,17 @@ void resolverEcuacion(ecuacion_t* ecuaciones, int* cantEcuaciones){
     }
     dibujarTabla(tieneX, tieneY, ecuacionActual, nroOperacion);
 }
-void dibujarTabla(bool tieneX, bool tieneY, ecuacion_t* ecuacion, int nroOperacion){
+void dibujarTabla(int tieneX, int tieneY, ecuacion_t* ecuacion, int nroOperacion){
     int cantidadValores;
     float* valoresX = NULL;
     float* valoresY = NULL;
+    int i;
+    float valorCentralX;
+    float valorCentralY;
+    float valX_fila;
+    float valY_fila;
+    float resultado;
+
     if(nroOperacion == 1){
         do{
             printf("¿Cuantos valores quiere darle a la incognita? (El maximo es %d)\n", MAX_VALORES);
@@ -460,7 +490,7 @@ void dibujarTabla(bool tieneX, bool tieneY, ecuacion_t* ecuacion, int nroOperaci
                 return;
             }
             printf("Ingrese los valores para reemplazar x:\n");
-            for(int i = 0; i<cantidadValores; i++){
+            for(i = 0; i<cantidadValores; i++){
                 printf("Valor %d: \n", i+1);
                 scanf("%f", valoresX + i);
             }
@@ -469,10 +499,13 @@ void dibujarTabla(bool tieneX, bool tieneY, ecuacion_t* ecuacion, int nroOperaci
             valoresY = malloc(sizeof(float) * cantidadValores);
             if (valoresY == NULL) {
                 printf("Error: No hay memoria.\n");
+                if(valoresX != NULL){
+                    free(valoresX);
+                }
                 return;
             }
             printf("Ingrese los valores para reemplazar y:\n");
-            for(int i = 0; i<cantidadValores; i++){
+            for(i = 0; i<cantidadValores; i++){
                 printf("Valor %d: \n", i+1);
                 scanf("%f", valoresY + i);
             }
@@ -485,10 +518,10 @@ void dibujarTabla(bool tieneX, bool tieneY, ecuacion_t* ecuacion, int nroOperaci
                 printf("Error: No hay memoria.\n");
                 return;
             }
-            float valorCentralX;
+
             printf("Ingrese un valor para reemplazar a x:\n");
             scanf("%f", &valorCentralX);
-            for(int i = 0; i < 11; i++){
+            for(i = 0; i < 11; i++){
                 *(valoresX + i) = valorCentralX + (i - 5);
             }
         }
@@ -496,12 +529,15 @@ void dibujarTabla(bool tieneX, bool tieneY, ecuacion_t* ecuacion, int nroOperaci
             valoresY = malloc(sizeof(float) * cantidadValores);
             if (valoresY == NULL) {
                 printf("Error: No hay memoria.\n");
+                if(valoresX != NULL){
+                    free(valoresX);
+                }
                 return;
             }
-            float valorCentralY;
+
             printf("Ingrese un valor para reemplazar a y:\n");
             scanf("%f", &valorCentralY);
-            for(int i = 0; i < 11; i++){
+            for(i = 0; i < 11; i++){
                 *(valoresY + i) = valorCentralY + (i - 5);
             }
         }
@@ -521,10 +557,10 @@ void dibujarTabla(bool tieneX, bool tieneY, ecuacion_t* ecuacion, int nroOperaci
 
     printf("----------------------------------------------\n");
 
-    for (int i = 0; i < cantidadValores; i++) {
+    for (i = 0; i < cantidadValores; i++) {
 
-        float valX_fila = 0.0f;
-        float valY_fila = 0.0f;
+        valX_fila = 0.0f;
+        valY_fila = 0.0f;
 
         if (tieneX) {
             valX_fila = *(valoresX + i);
@@ -533,7 +569,7 @@ void dibujarTabla(bool tieneX, bool tieneY, ecuacion_t* ecuacion, int nroOperaci
             valY_fila = *(valoresY + i);
         }
 
-        float resultado = resolverEcuacionEvaluada(ecuacion, valX_fila, valY_fila);
+        resultado = resolverEcuacionEvaluada(ecuacion, valX_fila, valY_fila);
 
         if (tieneX) {
             printf("%-15.2f", valX_fila);
@@ -552,22 +588,27 @@ void dibujarTabla(bool tieneX, bool tieneY, ecuacion_t* ecuacion, int nroOperaci
 void ayuda() {
     limpiarConsola();
     printf("[H] Ayuda\n");
+    printf("0. La calculadora no permite espacios\n");
     printf("1. La calculadora tiene por ingresos solamente las letras x y \n");
     printf("2. No se puede dividir por 0\n");
     printf("3. Los operandos validos son (+ suma) (- resta) (* multiplicacion) (/ division) (^ potencia) (v raiz) \n");
     printf("4. Se pueden utilizar parentesis, tenga cuidado que estos agrupan segun lo que se ingrese \n");
     printf("5. La calculadora acepta el operador de resta unario, pero al ingresarlo se lo debe distinguir de la siguiente forma:\n '-' (resta binaria), '_' (resta unaria)\n");
     printf("6. Si se desea hacer una multiplicacion, esta debe aparecer de forma estrica, con el operador (*). Invalido: 7x // Pemitido: 7*x \n");
+    printf("7. El operador raiz se debe usar de la manera a(indice) v x(radicando)\n");
+    printf("8. La calculadora solo acepta números de entrada enteros, no ingrese números con decimales.\n");
     pausa();
 }
 
 char* pedirNombreArchivo(){
 
     char buffer[100];
+    char *nombre;
+
     printf("Ingrese nombre para el archivo de texto: ");
     scanf("%99s",buffer);
 
-    char *nombre = malloc(strlen(buffer)+5);
+    nombre = malloc(strlen(buffer)+5);
     if(!nombre){
         printf("Error al reservar memoria.\n");
         return NULL;
@@ -578,14 +619,16 @@ char* pedirNombreArchivo(){
 }
 
 void listarSesionesGuardadas() {
-    FILE *registro = fopen(LISTA_ARCHIVO, "r");
+    FILE *registro;
+    char nombre[100];
+    int i = 1;
+
+    registro = fopen(LISTA_ARCHIVO, "r");
     if (!registro) {
         printf("No hay sesiones guardadas aún.\n");
         return;
     }
 
-    char nombre[100];
-    int i = 1;
     printf("\n=== SESIONES GUARDADAS ===\n");
     while (fscanf(registro, "%99s", nombre) == 1) {
         printf("[%d] %s\n", i++, nombre);
@@ -595,11 +638,13 @@ void listarSesionesGuardadas() {
 }
 
 int contarSesionesGuardadas() {
-    FILE *registro = fopen(LISTA_ARCHIVO, "r");
-    if (!registro) return 0; // si no existe, aún no hay sesiones
-
+    FILE *registro;
     int contador = 0;
     char buffer[100];
+
+    registro = fopen(LISTA_ARCHIVO, "r");
+    if (!registro) return 0; // si no existe, aún no hay sesiones
+
     while (fgets(buffer, sizeof(buffer), registro)) {
         contador++;
     }
