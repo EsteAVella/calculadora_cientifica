@@ -10,8 +10,6 @@ void dibujarInicio();
 void limpiarConsola();
 void pausa();
 void limpiarBufferEntrada();
-int  leerContador();
-void guardarContador(int);
 int abrirSesion(ecuacion_t*, int);
 void guardarNombre(char*);
 int contarSesionesGuardadas();

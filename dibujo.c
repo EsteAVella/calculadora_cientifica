@@ -52,7 +52,7 @@ void dibujarInicio(){
            case 'F': resolverEcuacion(ecuaciones, &cantEcuacionesActuales); break;
            case 'H': ayuda(); break;
            case 'X': printf("Saliendo...\n"); break;
-           default: printf("Opción no válida.\n");
+           default: printf("Opción no valida.\n");
         }
 
     } while(opcion != 'X');
@@ -78,42 +78,7 @@ void limpiarBufferEntrada() {
 }
 
 //Funciones compartidas entre C, D, E
-int leerContador(void) {
 
-    FILE *pf;
-    int contador = 1;
-
-    pf = fopen(ARCHIVO_CONTADOR, "rb");
-    if (pf) {
-        if (fread(&contador, sizeof(int), 1, pf) != 1) {
-            contador = 1;
-        }
-        fclose(pf);
-    } else {
-        // caso base cuando no hay archivo crearlo con el 1 solo
-        pf = fopen(ARCHIVO_CONTADOR, "wb");
-        if (pf) {
-            fwrite(&contador, sizeof(int), 1, pf);
-            fclose(pf);
-        } else {
-            printf("No se pudo crear %s\n", ARCHIVO_CONTADOR);
-            return -9;
-        }
-    }
-    //Chqueo que no se vaya de rango si es 10 lo mandamos a 1
-    if (contador < 1 || contador > MAX_ARCHIVOS) contador = 1;
-    return contador;
-}
-
-void guardarContador(int contador) {
-    FILE *pf = fopen(ARCHIVO_CONTADOR, "wb");
-    if (pf) {
-        fwrite(&contador, sizeof(int), 1, pf);
-        fclose(pf);
-    } else {
-        printf("No se pudo abrir %s para escribir el contador\n", ARCHIVO_CONTADOR);
-    }
-}
 
 int abrirSesion(ecuacion_t *ecuaciones, int numeroSesion) {
     FILE *pf;
@@ -128,8 +93,8 @@ int abrirSesion(ecuacion_t *ecuaciones, int numeroSesion) {
         return 0;
     }
 
-    while (fgets((ecuaciones + i)->cadenaOriginal, sizeof((ecuaciones + i)->cadenaOriginal), pf)) {
-        (ecuaciones + i)->cadenaOriginal[strcspn((ecuaciones + i)->cadenaOriginal, "\n")] = '\0';
+    while (fgets((ecuaciones + i) -> cadenaOriginal, sizeof((ecuaciones + i) -> cadenaOriginal), pf)) {
+        (ecuaciones + i) -> cadenaOriginal[strcspn((ecuaciones + i)->cadenaOriginal, "\n")] = '\0';
         i++;
         if (i >= MAX_ECUACIONES) break;
     }
@@ -152,15 +117,15 @@ int escribirEcuacion(ecuacion_t *ecuacion, int *posicion) {
 
     limpiarBufferEntrada();
 
-    while(permitido=='0'){
+    while(permitido == '0'){
         printf("Ingrese la ecuacion: ");
         fgets(cadenaAux,sizeof(cadenaAux),stdin);
         permitido=verificarEcuacionEscrita(cadenaAux);
 
-        if(permitido=='0'){
+        if(permitido == '0'){
             printf("\nLa ecuacion escrita es invalida. Desea ver la AYUDA? s/n: ");
             scanf(" %c", &opcionAyuda);
-            if(tolower(opcionAyuda)=='s')
+            if(tolower(opcionAyuda) == 's')
                 ayuda();
         }
     }
@@ -170,13 +135,13 @@ int escribirEcuacion(ecuacion_t *ecuacion, int *posicion) {
     printf("\nDesea editarla (s/n)? ");
     scanf(" %c", &opcionEdicion);
     limpiarBufferEntrada();
-    if(tolower(opcionEdicion)=='s'){
+    if(tolower(opcionEdicion) == 's'){
         edicionEcuacion(cadenaAux);
         printf("\n La nueva ecuacion ingresada es: %s", cadenaAux);
     }
 
-    strcpy(punteroEcuacion->cadenaOriginal, cadenaAux);
-    tokenizar(punteroEcuacion->cadenaOriginal, punteroEcuacion);
+    strcpy(punteroEcuacion -> cadenaOriginal, cadenaAux);
+    tokenizar(punteroEcuacion -> cadenaOriginal, punteroEcuacion);
 
     if (!validarTokens(punteroEcuacion)) {
         printf("\nError: la ecuacion escrita tiene errores de sintaxis (por ejemplo '3x' o '+-+').\n");
@@ -188,27 +153,26 @@ int escribirEcuacion(ecuacion_t *ecuacion, int *posicion) {
         return 0;
     }
 
-    mostrarTokens(punteroEcuacion);
     return 1;
 }
 
 char verificarEcuacionEscrita(char *ecuacion){
 
-    char *punteroChar=ecuacion;
+    char *punteroChar = ecuacion;
 
-    while(*punteroChar!='\n'&&*punteroChar!='\0'){
+    while(*punteroChar != '\n' && *punteroChar != '\0'){
         if (!(ES_DIGITO(*punteroChar) || ES_INCOGNITA(*punteroChar) || ES_OPERACION(*punteroChar))) {
             return '0';
         }
         punteroChar++;
     }
-    *punteroChar='\0';
+    *punteroChar = '\0';
     return '1';
 }
 
 void edicionEcuacion(char* ecuacionAnterior){
     char nuevaEcuacion[50];
-    char permitido='0';
+    char permitido = '0';
 
     do{
         printf("\nIngrese la nueva ecuacion: ");
@@ -218,8 +182,8 @@ void edicionEcuacion(char* ecuacionAnterior){
             printf("No se realizaron cambios. Se mantiene la ecuacion anterior.\n");
             return;
         }
-        permitido=verificarEcuacionEscrita(nuevaEcuacion);
-    }while(permitido=='0');
+        permitido = verificarEcuacionEscrita(nuevaEcuacion);
+    }while(permitido == '0');
 
     strcpy(ecuacionAnterior, nuevaEcuacion);
 }
@@ -255,9 +219,9 @@ void eliminarEcuacion(ecuacion_t *ecuaciones, int *cantEcuaciones) {
     //a la izquierda. Para eso, llevo el punteroEcuacion al ultimo lugar posible del array.
     punteroEcuacion= ecuaciones+ (*cantEcuaciones-1);
 
-    punteroEcuacion->cadenaOriginal[0]='\0';
-    punteroEcuacion->cantTokens=0;
-    punteroEcuacion->cantTokensPostfijos=0;
+    punteroEcuacion->cadenaOriginal[0] = '\0';
+    punteroEcuacion->cantTokens = 0;
+    punteroEcuacion->cantTokensPostfijos = 0;
     memset(punteroEcuacion->ecuacion, 0, sizeof(punteroEcuacion->ecuacion));
     memset(punteroEcuacion->ecuacionPostfija, 0, sizeof(punteroEcuacion->ecuacionPostfija));
     // Actualizar el contador global
@@ -269,9 +233,9 @@ void eliminarEcuacion(ecuacion_t *ecuaciones, int *cantEcuaciones) {
 //Punto B
 void verEcuaciones(ecuacion_t *ecuacion, int cantidadEcuaciones) {
 
-    int i=0;
+    int i = 0;
     ecuacion_t *punteroEcuacion;
-    punteroEcuacion=ecuacion;
+    punteroEcuacion = ecuacion;
 
     limpiarConsola();
     for(i = 0; i < cantidadEcuaciones; i++){
@@ -291,7 +255,7 @@ void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
 
     punteroEcuacion = ecuacion;
 
-    if(*cant==0){
+    if(*cant == 0){
         printf("No hay ecuaciones cargadas en esta sesion.");
         return;
     }
@@ -369,12 +333,12 @@ void leerEcuaciones(ecuacion_t *ecuaciones, int *cantEcuaciones) {
     }
 
     listarSesionesGuardadas();
-    printf("\nSeleccione el número de sesión que desea abrir: ");
+    printf("\nSeleccione el numero de sesion que desea abrir: ");
     scanf("%d", &numero);
     limpiarBufferEntrada();
 
     if (numero < 1 || numero > total) {
-        printf("Número inválido.\n");
+        printf("Numero invalido.\n");
         return;
     }
 
@@ -397,6 +361,7 @@ void leerEcuaciones(ecuacion_t *ecuaciones, int *cantEcuaciones) {
 }
 
 //Punto E
+
 void borrarEcuaciones(void) {
     char op;
     FILE *registro;
@@ -427,7 +392,7 @@ void borrarEcuaciones(void) {
 
     remove(LISTA_ARCHIVO); // borra también el registro de nombres
 
-    printf("Se eliminaron %d archivos de sesión.\n", borrados);
+    printf("Se eliminaron %d archivos de sesion.\n", borrados);
 }
 
 //PUNTO F
@@ -490,8 +455,8 @@ void dibujarTabla(int tieneX, int tieneY, ecuacion_t* ecuacion, int nroOperacion
                 return;
             }
             printf("Ingrese los valores para reemplazar x:\n");
-            for(i = 0; i<cantidadValores; i++){
-                printf("Valor %d: \n", i+1);
+            for(i = 0; i < cantidadValores; i++){
+                printf("Valor %d: \n", i + 1);
                 scanf("%f", valoresX + i);
             }
         }
@@ -506,7 +471,7 @@ void dibujarTabla(int tieneX, int tieneY, ecuacion_t* ecuacion, int nroOperacion
             }
             printf("Ingrese los valores para reemplazar y:\n");
             for(i = 0; i<cantidadValores; i++){
-                printf("Valor %d: \n", i+1);
+                printf("Valor %d: \n", i + 1);
                 scanf("%f", valoresY + i);
             }
         }
@@ -544,7 +509,7 @@ void dibujarTabla(int tieneX, int tieneY, ecuacion_t* ecuacion, int nroOperacion
     }
     limpiarConsola();
 
-    printf("Ecuacion: %s\n", ecuacion->cadenaOriginal);
+    printf("Ecuacion: %s\n", ecuacion -> cadenaOriginal);
     printf("\n================ TABLA DE RESULTADOS =================\n");
 
     if (tieneX) {
@@ -585,6 +550,7 @@ void dibujarTabla(int tieneX, int tieneY, ecuacion_t* ecuacion, int nroOperacion
 }
 
 //Punto H
+
 void ayuda() {
     limpiarConsola();
     printf("[H] Ayuda\n");
@@ -597,6 +563,11 @@ void ayuda() {
     printf("6. Si se desea hacer una multiplicacion, esta debe aparecer de forma estrica, con el operador (*). Invalido: 7x // Pemitido: 7*x \n");
     printf("7. El operador raiz se debe usar de la manera a(indice) v x(radicando)\n");
     printf("8. La calculadora solo acepta números de entrada enteros, no ingrese números con decimales.\n");
+    printf("9. No agregar extensiones a los archivos, la calculadora se encarga de guardarlos con la extension correspondiente.\n");
+    printf("10.No agregar caracteres especiales al nombre del archivo personalizado, esto podria generar problemas en recuperarlos.\n");
+    printf("11.No modificar archivos .txt manualmente.\n");
+    printf("12.El menu se selecciona con letras, respetar las mismas (a,b,c,d,e,f,g,h,x)\n");
+    printf("13.Se omitieron todos los tildes en consola por problemas de compatibilidad.\n");
     pausa();
 }
 
@@ -608,7 +579,9 @@ char* pedirNombreArchivo(){
     printf("Ingrese nombre para el archivo de texto: ");
     scanf("%99s",buffer);
 
-    nombre = malloc(strlen(buffer)+5);
+    //Agregamos los +5 para asegurar el .txt\0
+    nombre = malloc(strlen(buffer) + 5);
+
     if(!nombre){
         printf("Error al reservar memoria.\n");
         return NULL;
@@ -619,6 +592,7 @@ char* pedirNombreArchivo(){
 }
 
 void listarSesionesGuardadas() {
+
     FILE *registro;
     char nombre[100];
     int i = 1;
@@ -638,6 +612,7 @@ void listarSesionesGuardadas() {
 }
 
 int contarSesionesGuardadas() {
+
     FILE *registro;
     int contador = 0;
     char buffer[100];
@@ -655,7 +630,13 @@ int contarSesionesGuardadas() {
 
 void guardarNombre(char* nombreArchivo){
 
-    FILE *registro = fopen(LISTA_ARCHIVO,"a");
+    FILE *registro;
+    registro = fopen(LISTA_ARCHIVO,"a");
+
+    if(!registro){
+        printf("Error en la funcion guardarNombre");
+        return;
+    }
     if(registro){
         fprintf(registro,"%s\n",nombreArchivo);
         fclose(registro);
