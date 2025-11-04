@@ -148,11 +148,6 @@ int escribirEcuacion(ecuacion_t *ecuacion, int *posicion) {
         return 0;
     }
 
-    if (aPostfijo(punteroEcuacion) == 0) {
-        printf("\nError de sintaxis: la ecuacion no se pudo procesar correctamente.\n");
-        return 0;
-    }
-
     return 1;
 }
 
