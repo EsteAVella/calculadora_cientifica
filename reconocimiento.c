@@ -68,67 +68,6 @@ void tokenizar(char *cadena, ecuacion_t *ecu){
     free(numeroAux);
 }
 
-void mostrarTokens(ecuacion_t *ecu) {
-    Token t;
-
-    printf("Cadena original: %s\n", ecu->cadenaOriginal);
-    printf("Cantidad de tokens: %d\n", ecu->cantTokens);
-
-    for (int i = 0; i < ecu->cantTokens; i++) {
-        t = *(ecu->ecuacion + i);
-        printf("Token %d -> ", i);
-
-        switch (t.tipo) {
-            case DIGITO:
-                printf("DIGITO (%d)\n", t.valor);
-                break;
-
-            case OPERACION:
-                printf("OPERACION (%c)\n", t.operacion);
-                break;
-
-            case INCOGNITA:
-                printf("INCOGNITA (%c)\n", t.incognita);
-                break;
-
-            default:
-                printf("DESCONOCIDO\n");
-                break;
-        }
-    }
-}
-
-
-void mostrarPostfija(ecuacion_t *ecu) {
-    Token t;
-
-    printf("Cadena original: %s\n", ecu->cadenaOriginal);
-    printf("\n\nCantidad de tokens en postfija: %d\n", ecu->cantTokensPostfijos);
-
-    for (int i = 0; i < ecu->cantTokensPostfijos; i++) {
-        t = *(ecu->ecuacionPostfija + i);
-        printf("Token %d -> ", i);
-
-        switch (t.tipo) {
-            case DIGITO:
-                printf("DIGITO (%d)\n", t.valor);
-                break;
-
-            case OPERACION:
-                printf("OPERACION (%c)\n", t.operacion);
-                break;
-
-            case INCOGNITA:
-                printf("INCOGNITA (%c)\n", t.incognita);
-                break;
-
-            default:
-                printf("DESCONOCIDO\n");
-                break;
-        }
-    }
-}
-
 int validarTokens(ecuacion_t* ecu) {
     Token* p = ecu->ecuacion;
     Token* fin = ecu->ecuacion + ecu->cantTokens;
@@ -196,3 +135,66 @@ int validarTokens(ecuacion_t* ecu) {
 
     return 1;
 }
+
+
+//Funciones para pruebas
+/*
+void mostrarTokens(ecuacion_t *ecu) {
+    Token t;
+
+    printf("Cadena original: %s\n", ecu->cadenaOriginal);
+    printf("Cantidad de tokens: %d\n", ecu->cantTokens);
+
+    for (int i = 0; i < ecu->cantTokens; i++) {
+        t = *(ecu->ecuacion + i);
+        printf("Token %d -> ", i);
+
+        switch (t.tipo) {
+            case DIGITO:
+                printf("DIGITO (%d)\n", t.valor);
+                break;
+
+            case OPERACION:
+                printf("OPERACION (%c)\n", t.operacion);
+                break;
+
+            case INCOGNITA:
+                printf("INCOGNITA (%c)\n", t.incognita);
+                break;
+
+            default:
+                printf("DESCONOCIDO\n");
+                break;
+        }
+    }
+}
+void mostrarPostfija(ecuacion_t *ecu) {
+    Token t;
+
+    printf("Cadena original: %s\n", ecu->cadenaOriginal);
+    printf("\n\nCantidad de tokens en postfija: %d\n", ecu->cantTokensPostfijos);
+
+    for (int i = 0; i < ecu->cantTokensPostfijos; i++) {
+        t = *(ecu->ecuacionPostfija + i);
+        printf("Token %d -> ", i);
+
+        switch (t.tipo) {
+            case DIGITO:
+                printf("DIGITO (%d)\n", t.valor);
+                break;
+
+            case OPERACION:
+                printf("OPERACION (%c)\n", t.operacion);
+                break;
+
+            case INCOGNITA:
+                printf("INCOGNITA (%c)\n", t.incognita);
+                break;
+
+            default:
+                printf("DESCONOCIDO\n");
+                break;
+        }
+    }
+}
+*/

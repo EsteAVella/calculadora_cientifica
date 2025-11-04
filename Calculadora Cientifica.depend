@@ -77,3 +77,42 @@
 	<string.h>
 	"reconocimiento.h"
 
+1762299392 source:c:\users\agustin\desktop\ultimo\calculadora_cientifica\conversion.c
+	"conversion.h"
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+
+1762299392 c:\users\agustin\desktop\ultimo\calculadora_cientifica\conversion.h
+	"reconocimiento.h"
+
+1762300079 c:\users\agustin\desktop\ultimo\calculadora_cientifica\reconocimiento.h
+	"estructuras.h"
+
+1762299392 c:\users\agustin\desktop\ultimo\calculadora_cientifica\estructuras.h
+
+1762299681 source:c:\users\agustin\desktop\ultimo\calculadora_cientifica\dibujo.c
+	<stdio.h>
+	<ctype.h>
+	<stdlib.h>
+	<string.h>
+	"estructuras.h"
+	"reconocimiento.h"
+	"dibujo.h"
+
+1762299392 c:\users\agustin\desktop\ultimo\calculadora_cientifica\dibujo.h
+	"conversion.h"
+
+1762299392 source:c:\users\agustin\desktop\ultimo\calculadora_cientifica\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"conversion.h"
+	"dibujo.h"
+
+1762300013 source:c:\users\agustin\desktop\ultimo\calculadora_cientifica\reconocimiento.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"reconocimiento.h"
+

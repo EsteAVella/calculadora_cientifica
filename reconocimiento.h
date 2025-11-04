@@ -21,8 +21,8 @@
 #include "estructuras.h"
 
 void tokenizar(char*, ecuacion_t*);
-void mostrarTokens(ecuacion_t*);
-void mostrarPostfija(ecuacion_t*);
 int validarTokens(ecuacion_t*);
+//void mostrarTokens(ecuacion_t*);
+//void mostrarPostfija(ecuacion_t*);
 
 #endif // RECONOCIMIENTO_H_INCLUDED

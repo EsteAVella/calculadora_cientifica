@@ -447,7 +447,7 @@ void dibujarTabla(int tieneX, int tieneY, ecuacion_t* ecuacion, int nroOperacion
 
     if(nroOperacion == 1){
         do{
-            printf("¿Cuantos valores quiere darle a la incognita? (El maximo es %d)\n", MAX_VALORES);
+            printf("Cuantos valores quiere darle a la incognita? (El maximo es %d)\n", MAX_VALORES);
             scanf("%d", &cantidadValores);
         }while(cantidadValores < 1 || cantidadValores > MAX_VALORES);
         if(tieneX){
@@ -566,7 +566,7 @@ void ayuda() {
     printf("7. El operador raiz se debe usar de la manera a(indice) v x(radicando) Ejemplo validos: 2v4 // 2v(4*x)\n");
     printf("8. La calculadora solo acepta números de entrada enteros, no ingrese números con decimales.\n");
     printf("9. No agregar extensiones a los archivos, la calculadora se encarga de guardarlos con la extension correspondiente.\n");
-    printf("10.No agregar caracteres especiales al nombre del archivo personalizado, esto podria generar problemas en recuperarlos.\n");
+    printf("10.No agregar caracteres especiales, ni espacios, al nombre del archivo personalizado. Esto podria generar problemas en recuperarlos.\n");
     printf("11.No modificar archivos .txt manualmente.\n");
     printf("12.El menu se selecciona con letras, respetar las mismas (a,b,c,d,e,f,g,h,x)\n");
     printf("13.Se omitieron todos los tildes en consola por problemas de compatibilidad.\n");
