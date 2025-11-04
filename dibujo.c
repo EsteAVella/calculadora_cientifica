@@ -561,7 +561,7 @@ void ayuda() {
     printf("4. Se pueden utilizar parentesis, tenga cuidado que estos agrupan segun lo que se ingrese \n");
     printf("5. La calculadora acepta el operador de resta unario, pero al ingresarlo se lo debe distinguir de la siguiente forma:\n '-' (resta binaria), '_' (resta unaria)\n");
     printf("6. Si se desea hacer una multiplicacion, esta debe aparecer de forma estrica, con el operador (*). Invalido: 7x // Pemitido: 7*x \n");
-    printf("7. El operador raiz se debe usar de la manera a(indice) v x(radicando)\n");
+    printf("7. El operador raiz se debe usar de la manera a(indice) v x(radicando) Ejemplo validos: 2v4 // 2v(4*x)\n");
     printf("8. La calculadora solo acepta números de entrada enteros, no ingrese números con decimales.\n");
     printf("9. No agregar extensiones a los archivos, la calculadora se encarga de guardarlos con la extension correspondiente.\n");
     printf("10.No agregar caracteres especiales al nombre del archivo personalizado, esto podria generar problemas en recuperarlos.\n");

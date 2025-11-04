@@ -156,7 +156,7 @@ int validarTokens(ecuacion_t* ecu) {
             if (anterior->tipo == OPERACION && p->tipo == OPERACION) {
                 opAnterior = anterior->operacion;
                 opActual = p->operacion;
-                if (opAnterior != '(' && opActual != '_' && opActual != '(') {
+                if (opAnterior != '(' && opActual != '_' && opActual != '(' && opAnterior != ')' ) {
                     return 0;
                 }
             }

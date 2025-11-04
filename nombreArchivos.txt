@@ -1,1 +1,3 @@
-chau.txt
+ecuPotencias.txt
+ecuRaices.txt
+ecuCombinadas.txt
