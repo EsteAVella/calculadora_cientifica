@@ -1,3 +1,4 @@
 ecuPotencias.txt
 ecuRaices.txt
 ecuCombinadas.txt
+ecuacionesDificiles.txt

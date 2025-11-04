@@ -401,6 +401,10 @@ void resolverEcuacion(ecuacion_t* ecuaciones, int* cantEcuaciones){
     int i;
     Token t;
 
+    if(*cantEcuaciones == 0){
+        printf("No hay ecuaciones en la sesion para resolver.");
+        return;
+    }
     verEcuaciones(ecuaciones, *cantEcuaciones);
     do{
         printf("Selecciona una de las ecuaciones mostradas para resolver: \n");

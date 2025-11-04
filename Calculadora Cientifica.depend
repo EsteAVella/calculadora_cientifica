@@ -38,3 +38,42 @@
 	<string.h>
 	"reconocimiento.h"
 
+1762141542 source:c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\conversion.c
+	"conversion.h"
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+
+1762140331 c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\conversion.h
+	"reconocimiento.h"
+
+1762143109 c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\reconocimiento.h
+	"estructuras.h"
+
+1761775601 c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\estructuras.h
+
+1762297494 source:c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\dibujo.c
+	<stdio.h>
+	<ctype.h>
+	<stdlib.h>
+	<string.h>
+	"estructuras.h"
+	"reconocimiento.h"
+	"dibujo.h"
+
+1762219098 c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\dibujo.h
+	"conversion.h"
+
+1761775601 source:c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"conversion.h"
+	"dibujo.h"
+
+1762219098 source:c:\users\usuario\desktop\topicos_2025\tp grupal git\calculadora_cientifica\reconocimiento.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"reconocimiento.h"
+
