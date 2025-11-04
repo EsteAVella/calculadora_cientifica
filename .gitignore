@@ -2,4 +2,5 @@ bin/
 obj/
 contador.bin
 Calculadora Cientifica.depend
-Calculadora Cientifica.layout
+Calculadora Cientifica.layout*.cbp
+*.layout
