@@ -307,7 +307,7 @@ void guardarReiniciar(ecuacion_t *ecuacion,int *cant) {
 //Punto D
 void leerEcuaciones(ecuacion_t *ecuaciones, int *cantEcuaciones) {
     FILE *registro;
-    char nombres [10][100];
+    char nombres [MAX_ARCHIVOS][100];
     int total = 0;
     int numero;
     FILE *pf;
@@ -320,7 +320,7 @@ void leerEcuaciones(ecuacion_t *ecuaciones, int *cantEcuaciones) {
         return;
     }
 
-    while (fgets(nombres[total], sizeof(nombres[total]), registro) && total < 10) {
+    while (fgets(nombres[total], sizeof(nombres[total]), registro) && total < MAX_ARCHIVOS) {
         nombres[total][strcspn(nombres[total], "\n")] = '\0';
         total++;
     }
@@ -352,6 +352,7 @@ void leerEcuaciones(ecuacion_t *ecuaciones, int *cantEcuaciones) {
     while (fgets(linea, sizeof(linea), pf) && *cantEcuaciones < MAX_ECUACIONES) {
         linea[strcspn(linea, "\n")] = '\0';
         strcpy((ecuaciones + *cantEcuaciones)->cadenaOriginal, linea);
+        tokenizar(linea, ecuaciones + *cantEcuaciones);
         (*cantEcuaciones)++;
     }
     fclose(pf);
@@ -412,6 +413,8 @@ void resolverEcuacion(ecuacion_t* ecuaciones, int* cantEcuaciones){
     }while(nroEcuacion<1 || nroEcuacion > *cantEcuaciones);
     limpiarConsola();
     ecuacionActual = ecuaciones + nroEcuacion - 1;
+    //tokenizar(ecuacionActual->cadenaOriginal, ecuacionActual);
+    aPostfijo(ecuacionActual);
     printf("Seleccione el tipo de resolucion para la ecuacion: %s\n", ecuacionActual->cadenaOriginal);
     printf("1- Ingresar una tabla de valores\n");
     printf("2- Ingresar un valor y generar el resto de la tabla\n");
