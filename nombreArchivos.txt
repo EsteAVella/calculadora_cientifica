@@ -1,3 +1,0 @@
-ecuPotencias.txt
-ecuRaices.txt
-ecuCombinadas.txt

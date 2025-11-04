@@ -1,0 +1,40 @@
+# depslib dependency file v1.0
+1762208028 source:c:\users\agustin\desktop\tp calcu\calculadora_cientifica\conversion.c
+	"conversion.h"
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+
+1762208028 c:\users\agustin\desktop\tp calcu\calculadora_cientifica\conversion.h
+	"reconocimiento.h"
+
+1762208028 c:\users\agustin\desktop\tp calcu\calculadora_cientifica\reconocimiento.h
+	"estructuras.h"
+
+1762208028 c:\users\agustin\desktop\tp calcu\calculadora_cientifica\estructuras.h
+
+1762216329 source:c:\users\agustin\desktop\tp calcu\calculadora_cientifica\dibujo.c
+	<stdio.h>
+	<ctype.h>
+	<stdlib.h>
+	<string.h>
+	"estructuras.h"
+	"reconocimiento.h"
+	"dibujo.h"
+
+1762210224 c:\users\agustin\desktop\tp calcu\calculadora_cientifica\dibujo.h
+	"conversion.h"
+
+1762208028 source:c:\users\agustin\desktop\tp calcu\calculadora_cientifica\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"conversion.h"
+	"dibujo.h"
+
+1762212431 source:c:\users\agustin\desktop\tp calcu\calculadora_cientifica\reconocimiento.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"reconocimiento.h"
+
